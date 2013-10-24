@@ -61,7 +61,7 @@ class Tris(object):
         surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.key.set_repeat(50, 50)
 
-        trimino = Trimino.spawn(5, 5)
+        trimino = Trimino.spawn_random(5, 5)
 
         while True:
             event = pygame.event.poll()

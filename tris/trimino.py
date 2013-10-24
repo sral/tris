@@ -1,4 +1,7 @@
+import random
+
 import pygame.image
+
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
@@ -23,6 +26,37 @@ class Trimino(object):
         self.max_rotation = max_rotation
         self.rotation = 0
         self.rotations = rotations
+
+    @classmethod
+    def spawn_random(cls, x, y):
+        """Spawn random trimino."""
+
+        triminos = {0: TriminoO,
+                    1: TriminoI,
+                    2: TriminoJ,
+                    3: TriminoL,
+                    4: TriminoS,
+                    5: TriminoT,
+                    6: TriminoZ}
+
+        return triminos[random.randint(0, 6)](x, y)
+
+    @classmethod
+    def spawn(cls, trimino_type, x, y):
+        """Spawn new block."""
+
+        triminos = {'O': TriminoO,
+                    'I': TriminoI,
+                    'J': TriminoJ,
+                    'L': TriminoL,
+                    'S': TriminoS,
+                    'T': TriminoT,
+                    'Z': TriminoZ}
+
+        if trimino_type in triminos.keys():
+            return triminos[trimino_type](x, y)
+        else:
+            raise ValueError("Illegal trimino type: %s" % trimino_type)
 
     def rotate_left(self):
         """Rotate block left."""
@@ -53,12 +87,6 @@ class Trimino(object):
 
     def __setitem__(self, key, value):
         raise TypeError("Trimino modification not allowed.")
-
-    @classmethod
-    def spawn(cls, x, y):
-        """Spawn new block."""
-
-        return TriminoO(x, y)
 
 
 class TriminoO(Trimino):
@@ -100,14 +128,14 @@ class TriminoJ(Trimino):
 
 
 class TriminoL(Trimino):
-    rotations = ({(0, 0): 4, # vertical
-                  (0, 1): 4,
-                  (0, 2): 4,
-                  (1, 2): 4},
-                 {(0, 1): 4, # horizontal
+    rotations = ({(0, 1): 4, # vertical
                   (1, 1): 4,
                   (2, 1): 4,
-                  (2, 0): 4})
+                  (2, 0): 4},
+                 {(0, 0): 4, # horizontal
+                  (0, 1): 4,
+                  (0, 2): 4,
+                  (1, 2): 4})
 
     def __init__(self, x, y):
         Trimino.__init__(self, x, y, self.rotations, max_rotation=1)
@@ -128,18 +156,18 @@ class TriminoS(Trimino):
 
 
 class TriminoT(Trimino):
-    rotations = ({(1, 0): 6, # up
-                  (0, 1): 6,
+    rotations = ({(0, 0): 6, # down
+                  (1, 0): 6,
                   (1, 1): 6,
-                  (2, 1): 6},
+                  (2, 0): 6},
                  {(0, 0): 6, # right
                   (0, 1): 6,
                   (1, 1): 6,
                   (0, 2): 6},
-                 {(0, 0): 6, # down
-                  (1, 0): 6,
+                 {(1, 0): 6, # up
+                  (0, 1): 6,
                   (1, 1): 6,
-                  (2, 0): 6},
+                  (2, 1): 6},
                  {(1, 0): 6, #left
                   (1, 1): 6,
                   (0, 1): 6,
@@ -150,11 +178,11 @@ class TriminoT(Trimino):
 
 
 class TriminoZ(Trimino):
-    rotations = ({(0, 0): 7,
+    rotations = ({(0, 0): 7,  # horizontal
                   (1, 0): 7,
                   (1, 1): 7,
                   (2, 1): 7},
-                 {(1, 0): 7,
+                 {(1, 0): 7,  # vertical
                   (0, 1): 7,
                   (1, 1): 7,
                   (0, 2): 7})
