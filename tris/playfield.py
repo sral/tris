@@ -10,14 +10,16 @@ class Playfield(object):
         self.width = width
         self.height = height
 
-
     def place_trimino(self):
         pass
 
-
     def __getitem__(self, key):
         """Get playfield value
-         key -- Tuple containing x and y coordinates"""
+
+        Keyword arguments:
+
+        key -- Tuple containing x and y coordinates
+        """
 
         x, y = key
         if (x < 0 or x >= self.width or
@@ -30,7 +32,8 @@ class Playfield(object):
 
         Keyword arguments:
         key -- Tuple containing x and y coordinates
-        value -- Block type"""
+        value -- Block type
+        """
 
         x, y = key
         if (x < 0 or x >= self.width or

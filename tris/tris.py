@@ -47,9 +47,24 @@ class Tris(object):
         self.playfield = Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT)
         pygame.time.set_timer(pygame.USEREVENT, START_SPEED)
 
-    def legal_move(self, playfield, trimino, coordinates):
-        """Returns True if move is legal, False otherwise."""
+    def legal_move(self, playfield, trimino, displacement):
+        """Returns True if move is legal, False otherwise.
 
+        Keyword arguments:
+        playfield -- Current playfield
+        trimino -- Trimino that is being moved
+        displacement -- Tuple containing x, y displacement i.e. the move
+        """
+
+        x1, y1 = displacement
+        for x0, y0 in trimino.keys():
+            x2 = x0 + x1
+            y2 = y0 + y1
+            if (x2 < 0 or
+                x2 >= PLAYFIELD_WIDTH or
+                y2 >= PLAYFIELD_HEIGHT or
+                playfield[(x2, y2)]):
+                return False
         return True
 
     def main(self):
@@ -74,17 +89,17 @@ class Tris(object):
                 if event.key == pygame.K_LEFT:
                     if self.legal_move(self.playfield,
                                        trimino,
-                                       trimino.x - 1):
+                                       (trimino.x - 1, trimino.y)):
                         trimino.x -= 1
                 if event.key == pygame.K_RIGHT:
                     if self.legal_move(self.playfield,
                                        trimino,
-                                       trimino.x + 1):
+                                       (trimino.x + 1, trimino.y)):
                         trimino.x += 1
                 if event.key == pygame.K_DOWN:
                     if self.legal_move(self.playfield,
                                        trimino,
-                                       trimino.y + 1):
+                                       (trimino.x, trimino.y + 1)):
                         trimino.y += 1
                 if event.key == pygame.K_ESCAPE:
                     break
