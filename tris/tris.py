@@ -84,7 +84,7 @@ class Tris(object):
             if event.type == pygame.QUIT:
                 break
             elif event.type == pygame.USEREVENT:
-                print "timer"
+                pass  # Will be used to move blocks down
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     if self.legal_move(self.playfield,
