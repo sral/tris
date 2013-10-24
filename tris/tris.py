@@ -59,6 +59,7 @@ class Tris(object):
         self.new_game()
 
         surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        surface.fill(0xC4CFA1)  # Same colour as splash screen
         pygame.key.set_repeat(50, 50)
 
         trimino = Trimino.spawn_random(5, 5)
