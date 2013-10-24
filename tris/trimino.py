@@ -2,6 +2,8 @@ import pygame.image
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
+BLOCK_SIZE = 16  # Block sprites are 16x6
+
 
 class Trimino(object):
     sprites = {1: pygame.image.load('data/block0.gif'),
@@ -44,7 +46,7 @@ class Trimino(object):
     def draw(self, screen):
         for x0, y0 in self.keys():
             screen.blit(self.sprites[1],
-                        ((x0 + self.x) * 16, (y0 + self.y) * 16))
+                        ((x0 + self.x) * BLOCK_SIZE, (y0 + self.y) * BLOCK_SIZE))
 
     def __getitem__(self, key):
         return self.rotations[self.rotation].get(key, 0)

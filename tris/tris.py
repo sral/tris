@@ -5,16 +5,17 @@ from trimino import Trimino
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
-SCREEN_WIDTH = 256
-SCREEN_HEIGHT = 256
-SPLASH_X_SIZE = 200
-SPLASH_Y_SIZE = 320
+BLOCK_SIZE = 16  # Block sprites are 16x6
+SPLASH_WIDTH = 200
+SPLASH_HEIGHT = 320
 PLAYFIELD_WIDTH = 10
 PLAYFIELD_HEIGHT = 20
+SCREEN_WIDTH = PLAYFIELD_WIDTH * BLOCK_SIZE
+SCREEN_HEIGHT = PLAYFIELD_HEIGHT * BLOCK_SIZE
 START_SPEED = 700  # milliseconds, initial falling speed
 
-class Tris(object):
 
+class Tris(object):
     splash_image = pygame.image.load('data/splash.gif')
 
     def __init__(self):
@@ -24,10 +25,11 @@ class Tris(object):
         pygame.init()
         pygame.display.set_caption("tris")
 
+
     def splash_screen(self):
         """Display splash screen. """
 
-        surface = pygame.display.set_mode((SPLASH_X_SIZE, SPLASH_Y_SIZE))
+        surface = pygame.display.set_mode((SPLASH_WIDTH, SPLASH_HEIGHT))
 
         while True:
             event = pygame.event.poll()
@@ -54,10 +56,10 @@ class Tris(object):
         """Main loop."""
 
         self.splash_screen()
-
-        surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_WIDTH))
-
         self.new_game()
+
+        surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pygame.key.set_repeat(50, 50)
 
         trimino = Trimino.spawn(5, 5)
 
