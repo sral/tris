@@ -52,23 +52,21 @@ class Tris(object):
             surface.blit(self.splash_image, (0, 0))
             pygame.display.flip()
 
-    def legal_move(self, playfield, trimino, delta):
+    def legal_move(self, playfield, trimino):
         """Returns True if move is legal, False otherwise.
 
         Keyword arguments:
         playfield -- Current playfield
         trimino -- Trimino that is being moved
-        delta -- Tuple containing x, y displacement i.e. the move
         """
 
-        x1, y1 = delta
-        for x0, y0 in trimino.keys():
-            x2 = x0 + x1
-            y2 = y0 + y1
-            if (x2 < 0 or
-                        x2 >= PLAYFIELD_WIDTH or
-                        y2 >= PLAYFIELD_HEIGHT or
-                    playfield[(x2, y2)]):
+        for x, y in trimino.keys():
+            x += trimino.x
+            y += trimino.y
+            if (x < 0 or
+                        x >= PLAYFIELD_WIDTH or
+                        y >= PLAYFIELD_HEIGHT or
+                    playfield[(x, y)]):
                 return False
         return True
 
@@ -95,42 +93,31 @@ class Tris(object):
                 if event.type == pygame.QUIT:
                     sys.exit(0)
                 elif event.type == pygame.USEREVENT:
-                    if self.legal_move(playfield,
-                                       trimino,
-                                       (trimino.x, trimino.y + 1)):
-                        trimino.y += 1
-                    else:
-                        playfield.place_trimino(trimino)
+                    if not self.legal_move(playfield, trimino.move_down()):
+                        playfield.place_trimino(trimino.move_up())
                         trimino = Trimino.get_random(int(PLAYFIELD_WIDTH / 2), 0,
                                                      self.block_sprites)
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
-                        if self.legal_move(playfield,
-                                           trimino,
-                                           (trimino.x - 1, trimino.y)):
-                            trimino.x -= 1
-                    if event.key == pygame.K_RIGHT:
-                        if self.legal_move(playfield,
-                                           trimino,
-                                           (trimino.x + 1, trimino.y)):
-                            trimino.x += 1
-                    if event.key == pygame.K_DOWN:
-                        if self.legal_move(playfield,
-                                           trimino,
-                                           (trimino.x, trimino.y + 1)):
-                            trimino.y += 1
-                    if event.key == pygame.K_j:
-                        trimino.rotate_left()
                         if not self.legal_move(playfield,
-                                               trimino,
-                                               (trimino.x, trimino.y)):
+                                               trimino.move_left()):
+                            trimino.move_right()  # Revert move
+                    if event.key == pygame.K_RIGHT:
+                        if not self.legal_move(playfield,
+                                               trimino.move_right()):
+                            trimino.move_left()  # Revert move
+                    if event.key == pygame.K_DOWN:
+                        if not self.legal_move(playfield,
+                                               trimino.move_down()):
+                            trimino.move_up()  # Revert move
+                    if event.key == pygame.K_j:
+                        if not self.legal_move(playfield,
+                                               trimino.rotate_left()):
                             trimino.rotate_right()  # Revert rotation
                     if event.key == pygame.K_k:
-                        trimino.rotate_right()
                         if not self.legal_move(playfield,
-                                               trimino,
-                                               (trimino.x, trimino.y)):
-                            trimino.rotate_left()  # Revert rotation
+                                               trimino.rotate_right()):
+                            trimino.rotate_left() # Revert rotation
                     if event.key == pygame.K_SPACE:
                         pass  # Drop and place block
                 elif event.type == pygame.KEYUP:
@@ -141,6 +128,7 @@ class Tris(object):
                 pygame.display.flip()
 
             pygame.time.set_timer(pygame.USEREVENT, 0)  # Disable timer
+
 
 if __name__ == "__main__":
     t = Tris()

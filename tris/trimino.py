@@ -6,14 +6,22 @@ BLOCK_SIZE = 16
 
 
 class Trimino(object):
-    def __init__(self, x, y, rotations, max_rotation, block_sprites):
-        """Initialize instance."""
+    def __init__(self, x, y, rotations, block_sprites):
+        """Initialize instance.
+
+        Keyword arguments:
+        x --
+        y --
+        rotations --
+        max_rotation --
+        block_sprites --
+        """
 
         self.x = x
         self.y = y
-        self.max_rotation = max_rotation
         self.rotation = 0
         self.rotations = rotations
+        self.max_rotation = len(rotations) - 1
         self.block_sprites = block_sprites
 
     @classmethod
@@ -47,6 +55,30 @@ class Trimino(object):
         else:
             raise ValueError("Illegal trimino type: %s" % trimino_type)
 
+    def move_left(self):
+        """Move block left."""
+
+        self.x -= 1
+        return self
+
+    def move_right(self):
+        """Move block right."""
+
+        self.x += 1
+        return self
+
+    def move_down(self):
+        """Move block down."""
+
+        self.y += 1
+        return self
+
+    def move_up(self):
+        """Move block up."""
+
+        self.y -= 1
+        return self
+
     def rotate_left(self):
         """Rotate block left."""
 
@@ -54,6 +86,7 @@ class Trimino(object):
             self.rotation -= 1
         else:
             self.rotation = self.max_rotation
+        return self
 
     def rotate_right(self):
         """Rotate block right."""
@@ -62,6 +95,7 @@ class Trimino(object):
             self.rotation += 1
         else:
             self.rotation = 0
+        return self
 
     def keys(self):
         return self.rotations[self.rotation].keys()
@@ -95,7 +129,7 @@ class TriminoO(Trimino):
                   (1, 1): 1}, )
 
     def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, 0, block_sprites)
+        Trimino.__init__(self, x, y, self.rotations, block_sprites)
 
 
 class TriminoI(Trimino):
@@ -109,7 +143,7 @@ class TriminoI(Trimino):
                   (0, 3): 2})
 
     def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, 1, block_sprites)
+        Trimino.__init__(self, x, y, self.rotations, block_sprites)
 
 
 class TriminoJ(Trimino):
@@ -131,7 +165,7 @@ class TriminoJ(Trimino):
                   (2, 1): 3})
 
     def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, 3, block_sprites)
+        Trimino.__init__(self, x, y, self.rotations, block_sprites)
 
 
 class TriminoL(Trimino):
@@ -153,7 +187,7 @@ class TriminoL(Trimino):
                   (2, 0): 4})
 
     def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, 3, block_sprites)
+        Trimino.__init__(self, x, y, self.rotations, block_sprites)
 
 
 class TriminoS(Trimino):
@@ -167,7 +201,7 @@ class TriminoS(Trimino):
                   (0, 2): 5})
 
     def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, 1, block_sprites)
+        Trimino.__init__(self, x, y, self.rotations, block_sprites)
 
 
 class TriminoT(Trimino):
@@ -189,7 +223,7 @@ class TriminoT(Trimino):
                   (1, 2): 6})
 
     def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, 3, block_sprites)
+        Trimino.__init__(self, x, y, self.rotations, block_sprites)
 
 
 class TriminoZ(Trimino):
@@ -203,5 +237,5 @@ class TriminoZ(Trimino):
                   (0, 2): 7})
 
     def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, 1, block_sprites)
+        Trimino.__init__(self, x, y, self.rotations, block_sprites)
 
