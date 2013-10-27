@@ -7,7 +7,7 @@ __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 class TestTrimino(unittest.TestCase):
 
     def test_get_value(self):
-        trimino = Trimino.get('O', 0, 0)
+        trimino = Trimino.get('O', 0, 0, None)
         self.assertEqual(trimino[(0, 0)], 1)
 
     def test_trimino_modification(self):

@@ -8,7 +8,9 @@ class TestPlayfield(TestCase):
     def setUp(self):
         self.width = 10
         self.height = 20
-        self.playfield = tris.playfield.Playfield(self.width, self.height)
+        self.playfield = tris.playfield.Playfield(self.width,
+                                                  self.height,
+                                                  None)
 
     def test_playfield_empty(self):
         """Playfield should initially be empty."""
