@@ -9,14 +9,15 @@ BLOCK_SIZE = 16  # Block sprites are 16x6
 
 
 class Trimino(object):
-    sprites = {1: pygame.image.load('data/block0.gif'),
-               2: pygame.image.load('data/block1.gif'),
-               3: pygame.image.load('data/block2.gif'),
-               4: pygame.image.load('data/block3.gif'),
-               5: pygame.image.load('data/block4.gif'),
-               6: pygame.image.load('data/block5.gif'),
-               7: pygame.image.load('data/block6.gif'),
-               8: pygame.image.load('data/block7.gif')}
+    sprites = {0: pygame.image.load('data/block0.gif'),
+               1: pygame.image.load('data/block1.gif'),
+               2: pygame.image.load('data/block2.gif'),
+               3: pygame.image.load('data/block3.gif'),
+               4: pygame.image.load('data/block4.gif'),
+               5: pygame.image.load('data/block5.gif'),
+               6: pygame.image.load('data/block6.gif'),
+               7: pygame.image.load('data/block7.gif'),
+               8: pygame.image.load('data/block8.gif')}
 
     def __init__(self, x, y, rotations, max_rotation):
         """Initialize instance."""
@@ -72,7 +73,7 @@ class Trimino(object):
         if self.rotation < self.max_rotation:
             self.rotation += 1
         else:
-            self.rotation = self.max_rotation
+            self.rotation = 0
 
     def keys(self):
         return self.rotations[self.rotation].keys()
@@ -80,11 +81,16 @@ class Trimino(object):
     def itertiems(self):
         return self.rotations[self.rotation].iteritems()
 
-    def draw(self, screen):
+    def draw(self, surface):
+        """Draw trimino.
+
+        Keyword arguments:
+        surface -- Surface instance
+        """
         for coordinates, block_type in self.itertiems():
             x0, y0 = coordinates
-            screen.blit(self.sprites[block_type],
-                        ((x0 + self.x) * BLOCK_SIZE, (y0 + self.y) * BLOCK_SIZE))
+            surface.blit(self.sprites[block_type],
+                         ((x0 + self.x) * BLOCK_SIZE, (y0 + self.y) * BLOCK_SIZE))
 
     def __getitem__(self, key):
         return self.rotations[self.rotation].get(key, 0)
@@ -118,31 +124,47 @@ class TriminoI(Trimino):
 
 
 class TriminoJ(Trimino):
-    rotations = ({(0, 0): 3, # horizontal
+    rotations = ({(0, 2): 3, # vertical
+                  (1, 0): 3,
+                  (1, 1): 3,
+                  (1, 2): 3},
+                 {(0, 0): 3, # Rotated anti-clockwise 90 degrees
+                  (1, 0): 3,
+                  (2, 0): 3,
+                  (2, 1): 3},
+                 {(0, 0): 3, # Upside down
+                  (0, 1): 3,
+                  (0, 2): 3,
+                  (1, 0): 3},
+                 {(0, 0): 3, # Rotated clockwise 90 degrees
                   (0, 1): 3,
                   (1, 1): 3,
-                  (2, 1): 3},
-                 {(1, 0): 3, # vertical
-                  (1, 1): 3,
-                  (1, 2): 3,
-                  (0, 2): 3})
+                  (2, 1): 3})
 
     def __init__(self, x, y):
-        Trimino.__init__(self, x, y, self.rotations, max_rotation=1)
+        Trimino.__init__(self, x, y, self.rotations, max_rotation=3)
 
 
 class TriminoL(Trimino):
-    rotations = ({(0, 1): 4, # vertical
+    rotations = ({(0, 0): 4, # Vertical
+                  (0, 1): 4,
+                  (0, 2): 4,
+                  (1, 2): 4},
+                 {(0, 1): 4, # Rotated anti-clockwise 90 degrees
                   (1, 1): 4,
                   (2, 1): 4,
                   (2, 0): 4},
-                 {(0, 0): 4, # horizontal
+                 {(0, 0): 4, # Upside down
+                  (1, 0): 4,
+                  (1, 1): 4,
+                  (1, 2): 4},
+                 {(0, 0): 4, # Rotated clockwise 90 degrees
                   (0, 1): 4,
-                  (0, 2): 4,
-                  (1, 2): 4})
+                  (1, 0): 4,
+                  (2, 0): 4})
 
     def __init__(self, x, y):
-        Trimino.__init__(self, x, y, self.rotations, max_rotation=1)
+        Trimino.__init__(self, x, y, self.rotations, max_rotation=3)
 
 
 class TriminoS(Trimino):
@@ -182,15 +204,15 @@ class TriminoT(Trimino):
 
 
 class TriminoZ(Trimino):
-    rotations = ({(0, 0): 7,  # horizontal
+    rotations = ({(0, 0): 7, # horizontal
                   (1, 0): 7,
                   (1, 1): 7,
                   (2, 1): 7},
-                 {(1, 0): 7,  # vertical
+                 {(1, 0): 7, # vertical
                   (0, 1): 7,
                   (1, 1): 7,
                   (0, 2): 7})
 
     def __init__(self, x, y):
-        Trimino.__init__(self, x, y, self.rotations, max_rotation=2)
+        Trimino.__init__(self, x, y, self.rotations, max_rotation=1)
 

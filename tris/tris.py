@@ -61,9 +61,9 @@ class Tris(object):
             x2 = x0 + x1
             y2 = y0 + y1
             if (x2 < 0 or
-                x2 >= PLAYFIELD_WIDTH or
-                y2 >= PLAYFIELD_HEIGHT or
-                playfield[(x2, y2)]):
+                        x2 >= PLAYFIELD_WIDTH or
+                        y2 >= PLAYFIELD_HEIGHT or
+                    playfield[(x2, y2)]):
                 return False
         return True
 
@@ -101,8 +101,21 @@ class Tris(object):
                                        trimino,
                                        (trimino.x, trimino.y + 1)):
                         trimino.y += 1
+                if event.key == pygame.K_j:
+                    trimino.rotate_left()
+                    if not self.legal_move(self.playfield,
+                                           trimino,
+                                           (trimino.x, trimino.y)):
+                        trimino.rotate_right()  # Revert rotation
+                if event.key == pygame.K_k:
+                    trimino.rotate_right()
+                    if not self.legal_move(self.playfield,
+                                           trimino,
+                                           (trimino.x, trimino.y)):
+                        trimino.rotate_left()  # Revert rotation
                 if event.key == pygame.K_ESCAPE:
                     break
+            self.playfield.draw(surface)
             trimino.draw(surface)
             pygame.display.flip()
 
