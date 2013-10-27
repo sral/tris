@@ -21,7 +21,6 @@ class Tris(object):
     def __init__(self):
         """Initialize instance."""
 
-        self.playfield = None
         pygame.init()
         pygame.display.set_caption("tris")
         pygame.key.set_repeat(50, 50)
@@ -41,16 +40,11 @@ class Tris(object):
             surface.blit(self.splash_image, (0, 0))
             pygame.display.flip()
 
-    def new_game(self):
-        """Setup new game."""
-
-        self.playfield = Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT)
-        pygame.time.set_timer(pygame.USEREVENT, START_SPEED)
-
-    def legal_move(self, trimino, delta):
+    def legal_move(self, playfield, trimino, delta):
         """Returns True if move is legal, False otherwise.
 
         Keyword arguments:
+        playfield -- Current playfield
         trimino -- Trimino that is being moved
         delta -- Tuple containing x, y displacement i.e. the move
         """
@@ -62,7 +56,7 @@ class Tris(object):
             if (x2 < 0 or
                         x2 >= PLAYFIELD_WIDTH or
                         y2 >= PLAYFIELD_HEIGHT or
-                    self.playfield[(x2, y2)]):
+                    playfield[(x2, y2)]):
                 return False
         return True
 
@@ -71,7 +65,9 @@ class Tris(object):
 
         while True:
             self.splash_screen()
-            self.new_game()
+
+            playfield = Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT)
+            pygame.time.set_timer(pygame.USEREVENT, START_SPEED)
 
             surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
             surface.fill(0xC4CFA1)  # Same colour as splash screen
@@ -83,30 +79,36 @@ class Tris(object):
                 if event.type == pygame.QUIT:
                     sys.exit(0)
                 elif event.type == pygame.USEREVENT:
-                    if self.legal_move(trimino,
+                    if self.legal_move(playfield,
+                                       trimino,
                                        (trimino.x, trimino.y + 1)):
                         trimino.y += 1
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
-                        if self.legal_move(trimino,
+                        if self.legal_move(playfield,
+                                           trimino,
                                            (trimino.x - 1, trimino.y)):
                             trimino.x -= 1
                     if event.key == pygame.K_RIGHT:
-                        if self.legal_move(trimino,
+                        if self.legal_move(playfield,
+                                           trimino,
                                            (trimino.x + 1, trimino.y)):
                             trimino.x += 1
                     if event.key == pygame.K_DOWN:
-                        if self.legal_move(trimino,
+                        if self.legal_move(playfield,
+                                           trimino,
                                            (trimino.x, trimino.y + 1)):
                             trimino.y += 1
                     if event.key == pygame.K_j:
                         trimino.rotate_left()
-                        if not self.legal_move(trimino,
+                        if not self.legal_move(playfield,
+                                               trimino,
                                                (trimino.x, trimino.y)):
                             trimino.rotate_right()  # Revert rotation
                     if event.key == pygame.K_k:
                         trimino.rotate_right()
-                        if not self.legal_move(trimino,
+                        if not self.legal_move(playfield,
+                                               trimino,
                                                (trimino.x, trimino.y)):
                             trimino.rotate_left()  # Revert rotation
                     if event.key == pygame.K_SPACE:
@@ -114,7 +116,7 @@ class Tris(object):
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_ESCAPE:
                         break
-                self.playfield.draw(surface)
+                playfield.draw(surface)
                 trimino.draw(surface)
                 pygame.display.flip()
 
