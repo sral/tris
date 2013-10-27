@@ -5,25 +5,34 @@ from trimino import Trimino
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
-BLOCK_SIZE = 16  # Block sprites are 16x6
 SPLASH_WIDTH = 200
 SPLASH_HEIGHT = 320
 PLAYFIELD_WIDTH = 10
 PLAYFIELD_HEIGHT = 20
+BLOCK_SIZE = 16
 SCREEN_WIDTH = PLAYFIELD_WIDTH * BLOCK_SIZE
 SCREEN_HEIGHT = PLAYFIELD_HEIGHT * BLOCK_SIZE
 START_SPEED = 700  # milliseconds, initial falling speed
 
 
 class Tris(object):
-    splash_image = pygame.image.load('data/splash.gif')
-
-    def __init__(self):
-        """Initialize instance."""
+    def setup(self):
+        """Setup game."""
 
         pygame.init()
         pygame.display.set_caption("tris")
         pygame.key.set_repeat(50, 50)
+
+        self.splash_image = pygame.image.load('data/splash.gif')
+        self.block_sprites = {0: pygame.image.load('data/block0.gif'),
+                              1: pygame.image.load('data/block1.gif'),
+                              2: pygame.image.load('data/block2.gif'),
+                              3: pygame.image.load('data/block3.gif'),
+                              4: pygame.image.load('data/block4.gif'),
+                              5: pygame.image.load('data/block5.gif'),
+                              6: pygame.image.load('data/block6.gif'),
+                              7: pygame.image.load('data/block7.gif'),
+                              8: pygame.image.load('data/block8.gif')}
 
     def splash_screen(self):
         """Display splash screen. """
@@ -34,6 +43,9 @@ class Tris(object):
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
                 sys.exit(0)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    sys.exit(0)
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_RETURN:
                     break
@@ -63,16 +75,20 @@ class Tris(object):
     def main(self):
         """Main loop."""
 
+        self.setup()  # Load resources etc...
+
         while True:
             self.splash_screen()
-
-            playfield = Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT)
-            pygame.time.set_timer(pygame.USEREVENT, START_SPEED)
 
             surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
             surface.fill(0xC4CFA1)  # Same colour as splash screen
 
-            trimino = Trimino.get_random(int(PLAYFIELD_WIDTH / 2), 0)
+            playfield = Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT,
+                                  self.block_sprites)
+            trimino = Trimino.get_random(int(PLAYFIELD_WIDTH / 2), 0,
+                                         self.block_sprites)
+
+            pygame.time.set_timer(pygame.USEREVENT, START_SPEED)
 
             while True:
                 event = pygame.event.poll()
@@ -83,6 +99,10 @@ class Tris(object):
                                        trimino,
                                        (trimino.x, trimino.y + 1)):
                         trimino.y += 1
+                    else:
+                        playfield.place_trimino(trimino)
+                        trimino = Trimino.get_random(int(PLAYFIELD_WIDTH / 2), 0,
+                                                     self.block_sprites)
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
                         if self.legal_move(playfield,
@@ -121,7 +141,6 @@ class Tris(object):
                 pygame.display.flip()
 
             pygame.time.set_timer(pygame.USEREVENT, 0)  # Disable timer
-
 
 if __name__ == "__main__":
     t = Tris()

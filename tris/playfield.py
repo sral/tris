@@ -1,42 +1,43 @@
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
-import pygame
-
 BLOCK_SIZE = 16
 
 
 class Playfield(object):
-    sprites = {0: pygame.image.load('data/block0.gif'),
-               1: pygame.image.load('data/block1.gif'),
-               2: pygame.image.load('data/block2.gif'),
-               3: pygame.image.load('data/block3.gif'),
-               4: pygame.image.load('data/block4.gif'),
-               5: pygame.image.load('data/block5.gif'),
-               6: pygame.image.load('data/block6.gif'),
-               7: pygame.image.load('data/block7.gif'),
-               8: pygame.image.load('data/block8.gif')}
+
     playfield = {}
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, block_sprites):
         """Initialize instance."""
 
         self.width = width
         self.height = height
+        self.block_sprites = block_sprites
 
-    def place_trimino(self):
-        pass
+    def place_trimino(self, trimino):
+        """Place trimino onto playfield.
+
+        Keyword arguments:
+        trimino -- Trimino to be placed
+        """
+
+        for coordinates, block_type in trimino.itertiems():
+            x, y = coordinates
+            x += trimino.x
+            y += trimino.y
+            self[(x, y)] = block_type
 
     def draw(self, surface):
         for y in range(self.height):
             for x in range(self.width):
-                surface.blit(self.sprites[self[(x, y)]],
-                             (x * BLOCK_SIZE, y * BLOCK_SIZE))
+                surface.blit(self.block_sprites[self[(x, y)]],
+                             (x * BLOCK_SIZE,
+                              y * BLOCK_SIZE))
 
     def __getitem__(self, key):
         """Get playfield value
 
         Keyword arguments:
-
         key -- Tuple containing x and y coordinates
         """
 
