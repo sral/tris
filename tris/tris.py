@@ -24,7 +24,7 @@ class Tris(object):
         self.playfield = None
         pygame.init()
         pygame.display.set_caption("tris")
-
+        pygame.key.set_repeat(50, 50)
 
     def splash_screen(self):
         """Display splash screen. """
@@ -34,7 +34,7 @@ class Tris(object):
         while True:
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
-                break
+                sys.exit(0)
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_RETURN:
                     break
@@ -47,11 +47,10 @@ class Tris(object):
         self.playfield = Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT)
         pygame.time.set_timer(pygame.USEREVENT, START_SPEED)
 
-    def legal_move(self, playfield, trimino, delta):
+    def legal_move(self, trimino, delta):
         """Returns True if move is legal, False otherwise.
 
         Keyword arguments:
-        playfield -- Current playfield
         trimino -- Trimino that is being moved
         delta -- Tuple containing x, y displacement i.e. the move
         """
@@ -63,63 +62,63 @@ class Tris(object):
             if (x2 < 0 or
                         x2 >= PLAYFIELD_WIDTH or
                         y2 >= PLAYFIELD_HEIGHT or
-                    playfield[(x2, y2)]):
+                    self.playfield[(x2, y2)]):
                 return False
         return True
 
     def main(self):
         """Main loop."""
 
-        self.splash_screen()
-        self.new_game()
-
-        surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        surface.fill(0xC4CFA1)  # Same colour as splash screen
-        pygame.key.set_repeat(50, 50)
-
-        trimino = Trimino.get_random(5, 5)
-
         while True:
-            event = pygame.event.poll()
-            if event.type == pygame.QUIT:
-                break
-            elif event.type == pygame.USEREVENT:
-                pass  # Will be used to move blocks down
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    if self.legal_move(self.playfield,
-                                       trimino,
-                                       (trimino.x - 1, trimino.y)):
-                        trimino.x -= 1
-                if event.key == pygame.K_RIGHT:
-                    if self.legal_move(self.playfield,
-                                       trimino,
-                                       (trimino.x + 1, trimino.y)):
-                        trimino.x += 1
-                if event.key == pygame.K_DOWN:
-                    if self.legal_move(self.playfield,
-                                       trimino,
+            self.splash_screen()
+            self.new_game()
+
+            surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+            surface.fill(0xC4CFA1)  # Same colour as splash screen
+
+            trimino = Trimino.get_random(int(PLAYFIELD_WIDTH / 2), 0)
+
+            while True:
+                event = pygame.event.poll()
+                if event.type == pygame.QUIT:
+                    sys.exit(0)
+                elif event.type == pygame.USEREVENT:
+                    if self.legal_move(trimino,
                                        (trimino.x, trimino.y + 1)):
                         trimino.y += 1
-                if event.key == pygame.K_j:
-                    trimino.rotate_left()
-                    if not self.legal_move(self.playfield,
-                                           trimino,
-                                           (trimino.x, trimino.y)):
-                        trimino.rotate_right()  # Revert rotation
-                if event.key == pygame.K_k:
-                    trimino.rotate_right()
-                    if not self.legal_move(self.playfield,
-                                           trimino,
-                                           (trimino.x, trimino.y)):
-                        trimino.rotate_left()  # Revert rotation
-                if event.key == pygame.K_ESCAPE:
-                    break
-            self.playfield.draw(surface)
-            trimino.draw(surface)
-            pygame.display.flip()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        if self.legal_move(trimino,
+                                           (trimino.x - 1, trimino.y)):
+                            trimino.x -= 1
+                    if event.key == pygame.K_RIGHT:
+                        if self.legal_move(trimino,
+                                           (trimino.x + 1, trimino.y)):
+                            trimino.x += 1
+                    if event.key == pygame.K_DOWN:
+                        if self.legal_move(trimino,
+                                           (trimino.x, trimino.y + 1)):
+                            trimino.y += 1
+                    if event.key == pygame.K_j:
+                        trimino.rotate_left()
+                        if not self.legal_move(trimino,
+                                               (trimino.x, trimino.y)):
+                            trimino.rotate_right()  # Revert rotation
+                    if event.key == pygame.K_k:
+                        trimino.rotate_right()
+                        if not self.legal_move(trimino,
+                                               (trimino.x, trimino.y)):
+                            trimino.rotate_left()  # Revert rotation
+                    if event.key == pygame.K_SPACE:
+                        pass  # Drop and place block
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_ESCAPE:
+                        break
+                self.playfield.draw(surface)
+                trimino.draw(surface)
+                pygame.display.flip()
 
-        sys.exit(0)
+            pygame.time.set_timer(pygame.USEREVENT, 0)  # Disable timer
 
 
 if __name__ == "__main__":
