@@ -28,7 +28,7 @@ class Trimino(object):
         self.rotations = rotations
 
     @classmethod
-    def spawn_random(cls, x, y):
+    def get_random(cls, x, y):
         """Spawn random trimino."""
 
         triminos = {0: TriminoO,
@@ -42,7 +42,7 @@ class Trimino(object):
         return triminos[random.randint(0, 6)](x, y)
 
     @classmethod
-    def spawn(cls, trimino_type, x, y):
+    def get(cls, trimino_type, x, y):
         """Spawn new block."""
 
         triminos = {'O': TriminoO,
@@ -77,9 +77,13 @@ class Trimino(object):
     def keys(self):
         return self.rotations[self.rotation].keys()
 
+    def itertiems(self):
+        return self.rotations[self.rotation].iteritems()
+
     def draw(self, screen):
-        for x0, y0 in self.keys():
-            screen.blit(self.sprites[1],
+        for coordinates, block_type in self.itertiems():
+            x0, y0 = coordinates
+            screen.blit(self.sprites[block_type],
                         ((x0 + self.x) * BLOCK_SIZE, (y0 + self.y) * BLOCK_SIZE))
 
     def __getitem__(self, key):

@@ -47,16 +47,16 @@ class Tris(object):
         self.playfield = Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT)
         pygame.time.set_timer(pygame.USEREVENT, START_SPEED)
 
-    def legal_move(self, playfield, trimino, displacement):
+    def legal_move(self, playfield, trimino, delta):
         """Returns True if move is legal, False otherwise.
 
         Keyword arguments:
         playfield -- Current playfield
         trimino -- Trimino that is being moved
-        displacement -- Tuple containing x, y displacement i.e. the move
+        delta -- Tuple containing x, y displacement i.e. the move
         """
 
-        x1, y1 = displacement
+        x1, y1 = delta
         for x0, y0 in trimino.keys():
             x2 = x0 + x1
             y2 = y0 + y1
@@ -77,7 +77,7 @@ class Tris(object):
         surface.fill(0xC4CFA1)  # Same colour as splash screen
         pygame.key.set_repeat(50, 50)
 
-        trimino = Trimino.spawn_random(5, 5)
+        trimino = Trimino.get_random(5, 5)
 
         while True:
             event = pygame.event.poll()
