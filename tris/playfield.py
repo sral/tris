@@ -14,6 +14,32 @@ class Playfield(object):
         self.height = height
         self.block_sprites = block_sprites
 
+    def gravity(self, y):
+        """Make blocks fall.
+
+        Keyword arguments:
+        y -- Y-coordinate to start processing from
+        """
+
+        pass
+
+    def find_lines(self):
+        """Find and process lines."""
+
+        lines = 0
+        for y in reversed(range(self.height)):
+            line = True
+            for x0 in range(self.width):
+                if not self[(x0, y)]:
+                    line = False
+                    break
+            if line:
+                for x1 in range(self.width):
+                    self[(x1, y)] = 0
+                lines += 1
+        return lines
+
+
     def place_trimino(self, trimino):
         """Place trimino onto playfield.
 
