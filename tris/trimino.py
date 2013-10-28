@@ -195,10 +195,10 @@ class TriminoS(Trimino):
                   (2, 0): 5,
                   (0, 1): 5,
                   (1, 1): 5},
-                 {(1, 0): 5, # vertical
+                 {(0, 0): 5, # vertical
                   (0, 1): 5,
                   (1, 1): 5,
-                  (0, 2): 5})
+                  (1, 2): 5})
 
     def __init__(self, x, y, block_sprites):
         Trimino.__init__(self, x, y, self.rotations, block_sprites)
