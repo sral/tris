@@ -95,7 +95,7 @@ class Tris(object):
                 elif event.type == pygame.USEREVENT:
                     if not self.legal_move(playfield, trimino.move_down()):
                         playfield.place_trimino(trimino.move_up())
-                        playfield.find_lines()
+                        lines = playfield.find_lines()
                         trimino = Trimino.get_random(int(PLAYFIELD_WIDTH / 2), 0,
                                                      self.block_sprites)
                 elif event.type == pygame.KEYDOWN:
@@ -132,7 +132,7 @@ class Tris(object):
 
 
 if __name__ == "__main__":
-    t = Tris()
-    t.main()
+    tris = Tris()
+    tris.main()
 
 
