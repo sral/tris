@@ -14,7 +14,7 @@ class TestTrimino(unittest.TestCase):
         """Assignment should raise TypeError."""
 
         with self.assertRaises(TypeError):
-            trimino = Trimino.get('S', 0, 0)
+            trimino = Trimino.get('S', 0, 0, None)
             trimino[(0, 0)] = 1
 
 

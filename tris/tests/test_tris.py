@@ -15,10 +15,14 @@ class TestTris(TestCase):
         """Legal moves should return True."""
 
         trimino = Trimino.get("O", 0, 0, None)
-        #moves = (move_right, trimino.move_down, trimino.move_left)
-        #for move in moves:
-        #    self.assertTrue(self.tris.legal_move(self.playfield,
-        #                                         move()))
+        self.assertTrue(self.tris.legal_move(self.playfield,
+                                            trimino.move_right()))
+        self.assertTrue(self.tris.legal_move(self.playfield,
+                                            trimino.move_left()))
+        self.assertTrue(self.tris.legal_move(self.playfield,
+                                            trimino.move_down()))
+        self.assertTrue(self.tris.legal_move(self.playfield,
+                                            trimino.move_right()))
 
     def test_move_outside_of_playfield(self):
         """Illegal moves should return False."""

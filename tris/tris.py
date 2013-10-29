@@ -16,6 +16,13 @@ START_SPEED = 700  # milliseconds, initial falling speed
 
 
 class Tris(object):
+
+    def __init__(self):
+        """Initialize instance."""
+
+        self.splash_image = None
+        self.block_sprites = None
+
     def setup(self):
         """Setup game."""
 
