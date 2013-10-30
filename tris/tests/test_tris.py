@@ -26,13 +26,13 @@ class TestTris(TestCase):
 
         trimino = Trimino.get("O", 0, 0, None)
         self.assertTrue(self.tris.legal_move(self.playfield,
-                                            trimino.move_right()))
+                                             trimino.move_right()))
         self.assertTrue(self.tris.legal_move(self.playfield,
-                                            trimino.move_left()))
+                                             trimino.move_left()))
         self.assertTrue(self.tris.legal_move(self.playfield,
-                                            trimino.move_down()))
+                                             trimino.move_down()))
         self.assertTrue(self.tris.legal_move(self.playfield,
-                                            trimino.move_up()))
+                                             trimino.move_up()))
 
     def test_move_trimino_outside_of_playfield(self):
         """Moving trimino outside of playfield is not allowed.
