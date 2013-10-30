@@ -10,11 +10,10 @@ class Trimino(object):
         """Initialize instance.
 
         Keyword arguments:
-        x --
-        y --
-        rotations --
-        max_rotation --
-        block_sprites --
+        x -- Initial x-coordinate
+        y -- Initial y-coordinate
+        rotations -- Dictionary containing rotations/shapes
+        block_sprites -- Dictionary containing sprites
         """
 
         self.x = x
@@ -26,7 +25,13 @@ class Trimino(object):
 
     @classmethod
     def get_random(cls, x, y, block_sprites):
-        """Spawn random trimino."""
+        """Spawn random trimino.
+
+        Keyword arguments:
+        x -- Initial x-coordinate
+        y -- Initial y-coordinate
+        block_sprites -- Dictionary containing sprites
+        """
 
         triminos = {0: TriminoO,
                     1: TriminoI,
@@ -39,8 +44,15 @@ class Trimino(object):
         return triminos[random.randint(0, 6)](x, y, block_sprites)
 
     @classmethod
-    def get(cls, trimino_type, x, y, block_sprites):
-        """Spawn new block."""
+    def get(cls, block_type, x, y, block_sprites):
+        """Spawn new block.
+
+        Keyword arguments:
+        block_type -- Trimino type
+        x -- Initial x-coordinate
+        y -- Initial y-coordinate
+        block_sprites -- Dictionary containing sprites
+        """
 
         triminos = {'O': TriminoO,
                     'I': TriminoI,
@@ -50,10 +62,10 @@ class Trimino(object):
                     'T': TriminoT,
                     'Z': TriminoZ}
 
-        if trimino_type in triminos.keys():
-            return triminos[trimino_type](x, y, block_sprites)
+        if block_type in triminos.keys():
+            return triminos[block_type](x, y, block_sprites)
         else:
-            raise ValueError("Illegal trimino type: %s" % trimino_type)
+            raise ValueError("Illegal trimino type: %s" % block_type)
 
     def move_left(self):
         """Move block left."""
@@ -107,7 +119,7 @@ class Trimino(object):
         """Draw trimino.
 
         Keyword arguments:
-        surface -- Surface instance
+        surface -- Surface to draw trimino on
         """
         for coordinates, block_type in self.itertiems():
             x0, y0 = coordinates

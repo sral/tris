@@ -71,7 +71,7 @@ class Playfield(object):
 
         x, y = key
         if (x < 0 or x >= self.width or
-                    y < 0 or y >= self.height):
+                    y >= self.height):
             raise IndexError("")
         return self.playfield.get(key, 0)
 
@@ -85,6 +85,6 @@ class Playfield(object):
 
         x, y = key
         if (x < 0 or x >= self.width or
-                    y < 0 or y >= self.height):
+                    y >= self.height):
             raise IndexError("")
         self.playfield[key] = value

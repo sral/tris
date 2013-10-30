@@ -28,7 +28,6 @@ class TestPlayfield(TestCase):
 
         1.) Set value in playfield
         => Get should return same value
-
         """
 
         self.playfield[(0, 0)] = 1
@@ -37,15 +36,15 @@ class TestPlayfield(TestCase):
     def test_index_error_get(self):
         """Playfield should raise IndexError for invalid coordinates.
 
-        1.) Get value outside of Playfield
+        1.) Get value outside of Playfield (0 <= x < width & y < height)
         => IndexError is raised
         """
 
-        invalid_coordinates = ((-1, -1),
+        invalid_coordinates = ((-1, 0),
                                (self.width, self.height),
                                (self.width + 5, self.height + 7),
-                               (0, self.width),
-                               (self.height, 0))
+                               (0, self.height),
+                               (self.width, 0))
 
         with self.assertRaises(IndexError):
             for coordinates in invalid_coordinates:
@@ -54,15 +53,15 @@ class TestPlayfield(TestCase):
     def test_index_error_set(self):
         """Playfield should raise IndexError for invalid coordinates.
 
-        1.) Set value outside of Playfield
+        1.) Set value outside of Playfield (0 <= x < width & y < height)
         => IndexError is raised
         """
 
-        invalid_coordinates = ((-1, -1),
+        invalid_coordinates = ((-1, 0),
                                (self.width, self.height),
                                (self.width + 5, self.height + 7),
-                               (0, self.width),
-                               (self.height, 0))
+                               (0, self.height),
+                               (self.width, 0))
 
         with self.assertRaises(IndexError):
             for coordinates in invalid_coordinates:
