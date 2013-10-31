@@ -144,18 +144,22 @@ class Tris(object):
                 if event.key == pygame.K_SPACE:  # Hard drop
                     while self.legal_move(playfield, trimino.move_down()):
                         pass
-                    playfield.place_trimino(trimino.move_up())
-                    lines = playfield.find_lines()
-                    self.player.score += self.calculate_score(lines)
-                    trimino = self.spawn_trimino()
+                    if not playfield.place_trimino(trimino.move_up()):
+                        break  # GAME OVER!
+                    else:
+                        lines = playfield.find_lines()
+                        self.player.score += self.calculate_score(lines)
+                        trimino = self.spawn_trimino()
                 if event.key == pygame.K_ESCAPE:
                     break
             elif event.type == pygame.USEREVENT:
                 if not self.legal_move(playfield, trimino.move_down()):
-                    playfield.place_trimino(trimino.move_up())
-                    lines = playfield.find_lines()
-                    self.player.score += self.calculate_score(lines)
-                    trimino = self.spawn_trimino()
+                    if not playfield.place_trimino(trimino.move_up()):
+                        break  # GAME OVER
+                    else:
+                        lines = playfield.find_lines()
+                        self.player.score += self.calculate_score(lines)
+                        trimino = self.spawn_trimino()
             elif event.type == pygame.QUIT:
                 sys.exit(0)
             playfield.draw(surface)

@@ -47,13 +47,20 @@ class Playfield(object):
 
         Keyword arguments:
         trimino -- Trimino to be placed
+
+        Returns True on success, False on failure.
         """
 
-        for coordinates, block_type in trimino.itertiems():
-            x, y = coordinates
-            x += trimino.x
-            y += trimino.y
-            self[(x, y)] = block_type
+        try:
+            for coordinates, block_type in trimino.itertiems():
+                x, y = coordinates
+                x += trimino.x
+                y += trimino.y
+                self[(x, y)] = block_type
+            return True
+        except IndexError:
+            return False  # GAME OVER!
+
 
     def draw(self, surface):
         for y in range(self.height):
@@ -74,6 +81,7 @@ class Playfield(object):
             raise IndexError("")
         return self.playfield.get(key, 0)
 
+
     def __setitem__(self, key, value):
         """Set block in playfield.
 
@@ -84,6 +92,6 @@ class Playfield(object):
 
         x, y = key
         if (x < 0 or x >= self.width or
-                    y >= self.height):
+                    y < 0 or y >= self.height):
             raise IndexError("")
         self.playfield[key] = value
