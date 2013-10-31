@@ -75,7 +75,7 @@ class TestPlayfield(TestCase):
         """
 
         for x in range(self.width):
-            self.playfield[(x, self.height-1)] = 1
+            self.playfield[(x, self.height - 1)] = 1
 
         self.assertEqual(self.playfield.find_lines(), 1)
 
@@ -87,7 +87,7 @@ class TestPlayfield(TestCase):
         => find_lines() should return 3 lines found
         """
 
-        for y in range(self.height-1, self.height-4, -1):
+        for y in range(self.height - 1, self.height - 4, -1):
             for x in range(self.width):
                 self.playfield[(x, y)] = 1
 
