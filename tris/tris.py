@@ -29,6 +29,7 @@ class Tris(object):
         """Setup game."""
 
         pygame.init()
+        pygame.display.set_icon(pygame.image.load('data/icon.gif'))
         pygame.display.set_caption("tris")
         pygame.key.set_repeat(50, 50)
 
