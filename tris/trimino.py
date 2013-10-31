@@ -109,11 +109,11 @@ class Trimino(object):
             self.rotation = 0
         return self
 
-    def keys(self):
-        return self.rotations[self.rotation].keys()
+    def get_height(self):
+        """Returns triminio height."""
 
-    def itertiems(self):
-        return self.rotations[self.rotation].iteritems()
+        return max([y for x, y in self.keys()])
+
 
     def draw(self, surface):
         """Draw trimino.
@@ -126,6 +126,12 @@ class Trimino(object):
             surface.blit(self.block_sprites[block_type],
                          ((x0 + self.x) * BLOCK_SIZE,
                           (y0 + self.y) * BLOCK_SIZE))
+
+    def keys(self):
+        return self.rotations[self.rotation].keys()
+
+    def itertiems(self):
+        return self.rotations[self.rotation].iteritems()
 
     def __getitem__(self, key):
         return self.rotations[self.rotation].get(key, 0)
