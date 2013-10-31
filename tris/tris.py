@@ -2,7 +2,7 @@ import sys
 import pygame
 from player import Player
 from playfield import Playfield
-from tiles import Tiles
+from tiles import Tiles, TILE_WIDTH, TILE_HEIGHT
 from trimino import Trimino
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
@@ -11,8 +11,8 @@ SPLASH_WIDTH = 200
 SPLASH_HEIGHT = 320
 PLAYFIELD_WIDTH = 10
 PLAYFIELD_HEIGHT = 20
-SCREEN_WIDTH = PLAYFIELD_WIDTH * Tiles.TILE_WIDTH
-SCREEN_HEIGHT = PLAYFIELD_HEIGHT * Tiles.TILE_HEIGHT
+SCREEN_WIDTH = PLAYFIELD_WIDTH * TILE_WIDTH
+SCREEN_HEIGHT = PLAYFIELD_HEIGHT * TILE_HEIGHT
 START_SPEED = 700  # milliseconds, initial falling speed
 
 

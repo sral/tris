@@ -2,11 +2,11 @@ import pygame
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com'
 
+TILE_WIDTH = 16
+TILE_HEIGHT = 16
+
 
 class Tiles(object):
-    TILE_WIDTH = 16
-    TILE_HEIGHT = 16
-
     tiles = {0: pygame.image.load('data/block0.gif'),
              1: pygame.image.load('data/block1.gif'),
              2: pygame.image.load('data/block2.gif'),
@@ -28,5 +28,5 @@ class Tiles(object):
         """
 
         surface.blit(self.tiles[tile],
-                     (x * self.TILE_WIDTH,
-                      y * self.TILE_HEIGHT))
+                     (x * TILE_WIDTH,
+                      y * TILE_HEIGHT))
