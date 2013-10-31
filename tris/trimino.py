@@ -2,18 +2,16 @@ import random
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
-BLOCK_SIZE = 16
-
 
 class Trimino(object):
-    def __init__(self, x, y, rotations, block_sprites):
+    def __init__(self, x, y, rotations, tileset):
         """Initialize instance.
 
         Keyword arguments:
         x -- Initial x-coordinate
         y -- Initial y-coordinate
         rotations -- Dictionary containing rotations/shapes
-        block_sprites -- Dictionary containing sprites
+        tileset -- Tileset
         """
 
         self.x = x
@@ -21,16 +19,16 @@ class Trimino(object):
         self.rotation = 0
         self.rotations = rotations
         self.max_rotation = len(rotations) - 1
-        self.block_sprites = block_sprites
+        self.tileset = tileset
 
     @classmethod
-    def get_random(cls, x, y, block_sprites):
+    def get_random(cls, x, y, tileset):
         """Spawn random trimino.
 
         Keyword arguments:
         x -- Initial x-coordinate
         y -- Initial y-coordinate
-        block_sprites -- Dictionary containing sprites
+        tileset -- Tileset
         """
 
         triminos = {0: TriminoO,
@@ -41,17 +39,17 @@ class Trimino(object):
                     5: TriminoT,
                     6: TriminoZ}
 
-        return triminos[random.randint(0, 6)](x, y, block_sprites)
+        return triminos[random.randint(0, 6)](x, y, tileset)
 
     @classmethod
-    def get(cls, block_type, x, y, block_sprites):
+    def get(cls, shape, x, y, tileset):
         """Spawn new block.
 
         Keyword arguments:
-        block_type -- Trimino type
+        shape -- Trimino shape
         x -- Initial x-coordinate
         y -- Initial y-coordinate
-        block_sprites -- Dictionary containing sprites
+        tileset -- Tileset
         """
 
         triminos = {'O': TriminoO,
@@ -62,10 +60,10 @@ class Trimino(object):
                     'T': TriminoT,
                     'Z': TriminoZ}
 
-        if block_type in triminos.keys():
-            return triminos[block_type](x, y, block_sprites)
+        if shape in triminos.keys():
+            return triminos[shape](x, y, tileset)
         else:
-            raise ValueError("Illegal trimino type: %s" % block_type)
+            raise ValueError("Illegal trimino type: %s" % shape)
 
     def move_left(self):
         """Move block left."""
@@ -121,11 +119,10 @@ class Trimino(object):
         Keyword arguments:
         surface -- Surface to draw trimino on
         """
-        for coordinates, block_type in self.itertiems():
+
+        for coordinates, tile in self.itertiems():
             x0, y0 = coordinates
-            surface.blit(self.block_sprites[block_type],
-                         ((x0 + self.x) * BLOCK_SIZE,
-                          (y0 + self.y) * BLOCK_SIZE))
+            self.tileset.draw(surface, tile, x0 + self.x, y0 + self.y)
 
     def keys(self):
         return self.rotations[self.rotation].keys()
@@ -146,8 +143,8 @@ class TriminoO(Trimino):
                   (1, 0): 1,
                   (1, 1): 1}, )
 
-    def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, block_sprites)
+    def __init__(self, x, y, tileset):
+        Trimino.__init__(self, x, y, self.rotations, tileset)
 
 
 class TriminoI(Trimino):
@@ -160,8 +157,8 @@ class TriminoI(Trimino):
                   (1, 2): 2,
                   (1, 3): 2})
 
-    def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, block_sprites)
+    def __init__(self, x, y, tileset):
+        Trimino.__init__(self, x, y, self.rotations, tileset)
 
 
 class TriminoJ(Trimino):
@@ -182,8 +179,8 @@ class TriminoJ(Trimino):
                   (1, 1): 3,
                   (2, 1): 3})
 
-    def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, block_sprites)
+    def __init__(self, x, y, tileset):
+        Trimino.__init__(self, x, y, self.rotations, tileset)
 
 
 class TriminoL(Trimino):
@@ -204,8 +201,8 @@ class TriminoL(Trimino):
                   (1, 0): 4,
                   (2, 0): 4})
 
-    def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, block_sprites)
+    def __init__(self, x, y, tileset):
+        Trimino.__init__(self, x, y, self.rotations, tileset)
 
 
 class TriminoS(Trimino):
@@ -218,8 +215,8 @@ class TriminoS(Trimino):
                   (1, 1): 5,
                   (1, 2): 5})
 
-    def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, block_sprites)
+    def __init__(self, x, y, tileset):
+        Trimino.__init__(self, x, y, self.rotations, tileset)
 
 
 class TriminoT(Trimino):
@@ -240,8 +237,8 @@ class TriminoT(Trimino):
                   (0, 1): 6,
                   (1, 2): 6})
 
-    def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, block_sprites)
+    def __init__(self, x, y, tileset):
+        Trimino.__init__(self, x, y, self.rotations, tileset)
 
 
 class TriminoZ(Trimino):
@@ -254,6 +251,6 @@ class TriminoZ(Trimino):
                   (1, 1): 7,
                   (0, 2): 7})
 
-    def __init__(self, x, y, block_sprites):
-        Trimino.__init__(self, x, y, self.rotations, block_sprites)
+    def __init__(self, x, y, tileset):
+        Trimino.__init__(self, x, y, self.rotations, tileset)
 

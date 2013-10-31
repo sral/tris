@@ -4,12 +4,12 @@ BLOCK_SIZE = 16
 
 
 class Playfield(object):
-    def __init__(self, width, height, block_sprites):
+    def __init__(self, width, height, tileset):
         """Initialize instance."""
 
         self.width = width
         self.height = height
-        self.block_sprites = block_sprites
+        self.tileset = tileset
         self.playfield = {}
 
     def scroll_field(self, y):
@@ -28,7 +28,7 @@ class Playfield(object):
                     del self.playfield[(x, y + 1)]
 
     def find_lines(self):
-        """Find and process lines."""
+        """Find and process lines. Returns number of lines."""
 
         lines = 0
         for y in range(self.height):
@@ -58,15 +58,14 @@ class Playfield(object):
     def draw(self, surface):
         for y in range(self.height):
             for x in range(self.width):
-                surface.blit(self.block_sprites[self[(x, y)]],
-                             (x * BLOCK_SIZE,
-                              y * BLOCK_SIZE))
+                self.tileset.draw(surface, self[(x, y)], x, y)
+
 
     def __getitem__(self, key):
-        """Get playfield block.
+        """Returns playfield tile at coordinates.
 
         Keyword arguments:
-        key -- Tuple containing block coordinates
+        key -- Tuple containing tile coordinates
         """
 
         x, y = key
@@ -79,8 +78,8 @@ class Playfield(object):
         """Set block in playfield.
 
         Keyword arguments:
-        key -- Tuple containing block coordinates
-        value -- Block type
+        key -- Tuple containing tile coordinates
+        value -- Tile type
         """
 
         x, y = key

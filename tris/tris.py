@@ -2,6 +2,7 @@ import sys
 import pygame
 from player import Player
 from playfield import Playfield
+from tiles import Tiles
 from trimino import Trimino
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
@@ -10,9 +11,8 @@ SPLASH_WIDTH = 200
 SPLASH_HEIGHT = 320
 PLAYFIELD_WIDTH = 10
 PLAYFIELD_HEIGHT = 20
-BLOCK_SIZE = 16
-SCREEN_WIDTH = PLAYFIELD_WIDTH * BLOCK_SIZE
-SCREEN_HEIGHT = PLAYFIELD_HEIGHT * BLOCK_SIZE
+SCREEN_WIDTH = PLAYFIELD_WIDTH * Tiles.TILE_WIDTH
+SCREEN_HEIGHT = PLAYFIELD_HEIGHT * Tiles.TILE_HEIGHT
 START_SPEED = 700  # milliseconds, initial falling speed
 
 
@@ -20,7 +20,7 @@ class Tris(object):
     def __init__(self):
         """Initialize instance."""
 
-        self.block_sprites = None
+        self.tileset = None
         self.splash_image = None
         self.player = None
         self.lines = 0
@@ -32,15 +32,7 @@ class Tris(object):
         pygame.display.set_caption("tris")
         pygame.key.set_repeat(50, 50)
 
-        self.block_sprites = {0: pygame.image.load('data/block0.gif'),
-                              1: pygame.image.load('data/block1.gif'),
-                              2: pygame.image.load('data/block2.gif'),
-                              3: pygame.image.load('data/block3.gif'),
-                              4: pygame.image.load('data/block4.gif'),
-                              5: pygame.image.load('data/block5.gif'),
-                              6: pygame.image.load('data/block6.gif'),
-                              7: pygame.image.load('data/block7.gif'),
-                              8: pygame.image.load('data/block8.gif')}
+        self.tileset = Tiles()
         self.splash_image = pygame.image.load('data/splash.gif')
 
     def splash_screen(self):
@@ -109,7 +101,7 @@ class Tris(object):
         """Spawn new trimino."""
 
         trimino = Trimino.get_random(int(PLAYFIELD_WIDTH / 2), 0,
-                                     self.block_sprites)
+                                     self.tileset)
         trimino.y = -trimino.get_height() - 1
         return trimino
 
@@ -121,7 +113,7 @@ class Tris(object):
         surface.fill(0xC4CFA1)  # Same colour as splash screen
 
         playfield = Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT,
-                              self.block_sprites)
+                              self.tileset)
         trimino = self.spawn_trimino()
         pygame.time.set_timer(pygame.USEREVENT, START_SPEED)
 
