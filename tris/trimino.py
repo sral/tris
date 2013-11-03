@@ -112,7 +112,6 @@ class Trimino(object):
 
         return max([y for x, y in self.keys()])
 
-
     def draw(self, surface):
         """Draw trimino.
 
