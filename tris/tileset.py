@@ -6,7 +6,7 @@ TILE_WIDTH = 16
 TILE_HEIGHT = 16
 
 
-class Tiles(object):
+class Tileset(object):
     tiles = {0: pygame.image.load('data/block0.gif'),
              1: pygame.image.load('data/block1.gif'),
              2: pygame.image.load('data/block2.gif'),

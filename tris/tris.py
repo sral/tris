@@ -1,8 +1,9 @@
 import sys
 import pygame
+from font import Font
 from player import Player
 from playfield import Playfield
-from tiles import Tiles, TILE_WIDTH, TILE_HEIGHT
+from tileset import Tileset, TILE_WIDTH, TILE_HEIGHT
 from trimino import Trimino
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
@@ -34,8 +35,9 @@ class Tris(object):
         pygame.display.set_caption("tris")
         pygame.key.set_repeat(50, 50)
 
-        self.tileset = Tiles()
+        self.tileset = Tileset()
         self.splash_image = pygame.image.load('data/splash.gif')
+        self.font = Font()
 
     def splash_screen(self):
         """Display splash screen. """
@@ -181,6 +183,8 @@ class Tris(object):
                 sys.exit(0)
             playfield.draw(surface)
             trimino.draw(surface)
+            self.font.write(surface, 0, 1, "SCORE: %d" % self.player.score)
+            self.font.write(surface, 0, 10, "LEVEL: %d" % self.level)
             pygame.display.flip()
 
         pygame.time.set_timer(pygame.USEREVENT, 0)  # Disable timer
