@@ -73,15 +73,6 @@ class Tris(object):
 
         pass
 
-    def calculate_score(self, lines):
-        """Calculates score.
-
-        Keyword arguments:
-        lines -- Number of cleared lines
-        """
-
-        return 2 ** (lines - 1) * 100
-
     def update_level(self):
         """Update game level i.e. falling speed. """
 
@@ -90,6 +81,19 @@ class Tris(object):
         if speed <= 0:
             speed = 10
         pygame.time.set_timer(pygame.USEREVENT, speed)
+
+    def process_lines(self, playfield):
+        """Process playfield lines.
+
+        Keyword arguments:
+        playfield -- Playfield
+        """
+
+        lines = playfield.find_lines()
+        if lines:
+            self.player.score += 2 ** (lines - 1) * 100
+            self.lines += lines
+            self.update_level()
 
     def legal_move(self, playfield, trimino):
         """Returns True if move is legal, False otherwise.
@@ -110,7 +114,7 @@ class Tris(object):
         return True
 
     def spawn_trimino(self):
-        """Spawn new trimino."""
+        """Returns new trimino."""
 
         trimino = Trimino.get_random(int(PLAYFIELD_WIDTH / 2), 0,
                                      self.tileset)
@@ -159,11 +163,7 @@ class Tris(object):
                         break  # GAME OVER!
                     else:
                         trimino = self.spawn_trimino()
-                        lines = playfield.find_lines()
-                        if lines:
-                            self.player.score += self.calculate_score(lines)
-                            self.lines += lines
-                            self.update_level()
+                        self.process_lines(playfield)
                 if event.key == pygame.K_ESCAPE:
                     break
             elif event.type == pygame.USEREVENT:
@@ -172,11 +172,7 @@ class Tris(object):
                         break  # GAME OVER
                     else:
                         trimino = self.spawn_trimino()
-                        lines = playfield.find_lines()
-                        if lines:
-                            self.player.score += self.calculate_score(lines)
-                            self.lines += lines
-                            self.update_level()
+                        self.process_lines(playfield)
             elif event.type == pygame.QUIT:
                 sys.exit(0)
             playfield.draw(surface)
