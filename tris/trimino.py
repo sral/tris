@@ -4,6 +4,83 @@ __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
 
 class Trimino(object):
+    shapes = {'O': ({(0, 0): 1,
+                     (0, 1): 1,
+                     (1, 0): 1,
+                     (1, 1): 1}, ),
+              'I': ({(0, 0): 2, # vertical
+                     (1, 0): 2,
+                     (2, 0): 2,
+                     (3, 0): 2},
+                    {(1, 0): 2, # horizontal
+                     (1, 1): 2,
+                     (1, 2): 2,
+                     (1, 3): 2}),
+              'J': ({(0, 2): 3, # vertical
+                     (1, 0): 3,
+                     (1, 1): 3,
+                     (1, 2): 3},
+                    {(0, 0): 3, # Rotated anti-clockwise 90 degrees
+                     (1, 0): 3,
+                     (2, 0): 3,
+                     (2, 1): 3},
+                    {(0, 0): 3, # Upside down
+                     (0, 1): 3,
+                     (0, 2): 3,
+                     (1, 0): 3},
+                    {(0, 0): 3, # Rotated clockwise 90 degrees
+                     (0, 1): 3,
+                     (1, 1): 3,
+                     (2, 1): 3}),
+              'L': ({(0, 0): 4, # Vertical
+                     (0, 1): 4,
+                     (0, 2): 4,
+                     (1, 2): 4},
+                    {(0, 1): 4, # Rotated anti-clockwise 90 degrees
+                     (1, 1): 4,
+                     (2, 1): 4,
+                     (2, 0): 4},
+                    {(0, 0): 4, # Upside down
+                     (1, 0): 4,
+                     (1, 1): 4,
+                     (1, 2): 4},
+                    {(0, 0): 4, # Rotated clockwise 90 degrees
+                     (0, 1): 4,
+                     (1, 0): 4,
+                     (2, 0): 4}),
+              'S': ({(1, 0): 5, # horizontal
+                     (2, 0): 5,
+                     (0, 1): 5,
+                     (1, 1): 5},
+                    {(0, 0): 5, # vertical
+                     (0, 1): 5,
+                     (1, 1): 5,
+                     (1, 2): 5}),
+              'T': ({(0, 0): 6, # down
+                     (1, 0): 6,
+                     (1, 1): 6,
+                     (2, 0): 6},
+                    {(0, 0): 6, # right
+                     (0, 1): 6,
+                     (1, 1): 6,
+                     (0, 2): 6},
+                    {(1, 0): 6, # up
+                     (0, 1): 6,
+                     (1, 1): 6,
+                     (2, 1): 6},
+                    {(1, 0): 6, #left
+                     (1, 1): 6,
+                     (0, 1): 6,
+                     (1, 2): 6}),
+              'Z': ({(0, 0): 7, # horizontal
+                     (1, 0): 7,
+                     (1, 1): 7,
+                     (2, 1): 7},
+                    {(1, 0): 7, # vertical
+                     (0, 1): 7,
+                     (1, 1): 7,
+                     (0, 2): 7})}
+
     def __init__(self, x, y, rotations, tileset):
         """Initialize instance.
 
@@ -31,15 +108,8 @@ class Trimino(object):
         tileset -- Tileset
         """
 
-        triminos = {0: TriminoO,
-                    1: TriminoI,
-                    2: TriminoJ,
-                    3: TriminoL,
-                    4: TriminoS,
-                    5: TriminoT,
-                    6: TriminoZ}
-
-        return triminos[random.randint(0, 6)](x, y, tileset)
+        shapes = ('O', 'I', 'J', 'L', 'S', 'T', 'Z')
+        return cls.get(random.choice(shapes), x, y, tileset)
 
     @classmethod
     def get(cls, shape, x, y, tileset):
@@ -52,16 +122,8 @@ class Trimino(object):
         tileset -- Tileset
         """
 
-        triminos = {'O': TriminoO,
-                    'I': TriminoI,
-                    'J': TriminoJ,
-                    'L': TriminoL,
-                    'S': TriminoS,
-                    'T': TriminoT,
-                    'Z': TriminoZ}
-
-        if shape in triminos.keys():
-            return triminos[shape](x, y, tileset)
+        if shape in cls.shapes.keys():
+            return cls(x, y, cls.shapes[shape], tileset)
         else:
             raise ValueError("Illegal trimino type: %s" % shape)
 
@@ -88,6 +150,7 @@ class Trimino(object):
 
         self.y -= 1
         return self
+
 
     def rotate_left(self):
         """Rotate block left."""
@@ -134,122 +197,3 @@ class Trimino(object):
 
     def __setitem__(self, key, value):
         raise TypeError("Trimino modification not allowed.")
-
-
-class TriminoO(Trimino):
-    rotations = ({(0, 0): 1,
-                  (0, 1): 1,
-                  (1, 0): 1,
-                  (1, 1): 1}, )
-
-    def __init__(self, x, y, tileset):
-        Trimino.__init__(self, x, y, self.rotations, tileset)
-
-
-class TriminoI(Trimino):
-    rotations = ({(0, 0): 2, # vertical
-                  (1, 0): 2,
-                  (2, 0): 2,
-                  (3, 0): 2},
-                 {(1, 0): 2, # horizontal
-                  (1, 1): 2,
-                  (1, 2): 2,
-                  (1, 3): 2})
-
-    def __init__(self, x, y, tileset):
-        Trimino.__init__(self, x, y, self.rotations, tileset)
-
-
-class TriminoJ(Trimino):
-    rotations = ({(0, 2): 3, # vertical
-                  (1, 0): 3,
-                  (1, 1): 3,
-                  (1, 2): 3},
-                 {(0, 0): 3, # Rotated anti-clockwise 90 degrees
-                  (1, 0): 3,
-                  (2, 0): 3,
-                  (2, 1): 3},
-                 {(0, 0): 3, # Upside down
-                  (0, 1): 3,
-                  (0, 2): 3,
-                  (1, 0): 3},
-                 {(0, 0): 3, # Rotated clockwise 90 degrees
-                  (0, 1): 3,
-                  (1, 1): 3,
-                  (2, 1): 3})
-
-    def __init__(self, x, y, tileset):
-        Trimino.__init__(self, x, y, self.rotations, tileset)
-
-
-class TriminoL(Trimino):
-    rotations = ({(0, 0): 4, # Vertical
-                  (0, 1): 4,
-                  (0, 2): 4,
-                  (1, 2): 4},
-                 {(0, 1): 4, # Rotated anti-clockwise 90 degrees
-                  (1, 1): 4,
-                  (2, 1): 4,
-                  (2, 0): 4},
-                 {(0, 0): 4, # Upside down
-                  (1, 0): 4,
-                  (1, 1): 4,
-                  (1, 2): 4},
-                 {(0, 0): 4, # Rotated clockwise 90 degrees
-                  (0, 1): 4,
-                  (1, 0): 4,
-                  (2, 0): 4})
-
-    def __init__(self, x, y, tileset):
-        Trimino.__init__(self, x, y, self.rotations, tileset)
-
-
-class TriminoS(Trimino):
-    rotations = ({(1, 0): 5, # horizontal
-                  (2, 0): 5,
-                  (0, 1): 5,
-                  (1, 1): 5},
-                 {(0, 0): 5, # vertical
-                  (0, 1): 5,
-                  (1, 1): 5,
-                  (1, 2): 5})
-
-    def __init__(self, x, y, tileset):
-        Trimino.__init__(self, x, y, self.rotations, tileset)
-
-
-class TriminoT(Trimino):
-    rotations = ({(0, 0): 6, # down
-                  (1, 0): 6,
-                  (1, 1): 6,
-                  (2, 0): 6},
-                 {(0, 0): 6, # right
-                  (0, 1): 6,
-                  (1, 1): 6,
-                  (0, 2): 6},
-                 {(1, 0): 6, # up
-                  (0, 1): 6,
-                  (1, 1): 6,
-                  (2, 1): 6},
-                 {(1, 0): 6, #left
-                  (1, 1): 6,
-                  (0, 1): 6,
-                  (1, 2): 6})
-
-    def __init__(self, x, y, tileset):
-        Trimino.__init__(self, x, y, self.rotations, tileset)
-
-
-class TriminoZ(Trimino):
-    rotations = ({(0, 0): 7, # horizontal
-                  (1, 0): 7,
-                  (1, 1): 7,
-                  (2, 1): 7},
-                 {(1, 0): 7, # vertical
-                  (0, 1): 7,
-                  (1, 1): 7,
-                  (0, 2): 7})
-
-    def __init__(self, x, y, tileset):
-        Trimino.__init__(self, x, y, self.rotations, tileset)
-
