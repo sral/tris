@@ -61,12 +61,16 @@ class Playfield(object):
         except IndexError:
             return False  # GAME OVER!
 
-
     def draw(self, surface):
+        """Draw playfield.
+
+        Keyword arguments:
+        surface -- Surface to draw on
+        """
+
         for y in range(self.height):
             for x in range(self.width):
                 self.tileset.draw(surface, self[(x, y)], x, y)
-
 
     def __getitem__(self, key):
         """Returns playfield tile at coordinates.
@@ -80,7 +84,6 @@ class Playfield(object):
                     y >= self.height):
             raise IndexError("")
         return self.playfield.get(key, 0)
-
 
     def __setitem__(self, key, value):
         """Set block in playfield.

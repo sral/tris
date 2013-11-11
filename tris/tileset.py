@@ -2,20 +2,28 @@ import pygame
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com'
 
-TILE_WIDTH = 16
-TILE_HEIGHT = 16
-
-
 class Tileset(object):
-    tiles = {0: pygame.image.load('data/block0.gif'),
-             1: pygame.image.load('data/block1.gif'),
-             2: pygame.image.load('data/block2.gif'),
-             3: pygame.image.load('data/block3.gif'),
-             4: pygame.image.load('data/block4.gif'),
-             5: pygame.image.load('data/block5.gif'),
-             6: pygame.image.load('data/block6.gif'),
-             7: pygame.image.load('data/block7.gif'),
-             8: pygame.image.load('data/block8.gif')}
+
+    def __init__(self, image, tile_width, tile_height):
+        """Initialize instance.
+
+        Keyword arguments:
+        image -- Bitmap containing tiles
+        tile_width -- Tile width
+        tile_height -- Tile height
+        """
+
+        self.tile_width = tile_width
+        self.tile_height = tile_height
+        self.tiles = {}
+
+        image = pygame.image.load(image)
+
+        for i in range(image.get_width() / tile_width):
+            area = pygame.Rect(i * tile_width, 0, tile_width, tile_height)
+            tile = pygame.Surface((tile_width, tile_height))
+            tile.blit(image, (0, 0), area)
+            self.tiles[i] = tile
 
     def draw(self, surface, tile, x, y):
         """Draw tile on surface.
@@ -28,5 +36,5 @@ class Tileset(object):
         """
 
         surface.blit(self.tiles[tile],
-                     (x * TILE_WIDTH,
-                      y * TILE_HEIGHT))
+                     (x * self.tile_width,
+                      y * self.tile_height))

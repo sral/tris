@@ -3,7 +3,7 @@ import pygame
 from font import Font
 from player import Player
 from playfield import Playfield
-from tileset import Tileset, TILE_WIDTH, TILE_HEIGHT
+from tileset import Tileset
 from trimino import Trimino
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
@@ -12,6 +12,8 @@ SPLASH_WIDTH = 200
 SPLASH_HEIGHT = 320
 PLAYFIELD_WIDTH = 10
 PLAYFIELD_HEIGHT = 20
+TILE_WIDTH = 16
+TILE_HEIGHT = 16
 SCREEN_WIDTH = PLAYFIELD_WIDTH * TILE_WIDTH
 SCREEN_HEIGHT = PLAYFIELD_HEIGHT * TILE_HEIGHT
 START_SPEED = 700  # milliseconds, initial falling speed
@@ -21,11 +23,13 @@ class Tris(object):
     def __init__(self):
         """Initialize instance."""
 
-        self.tileset = None
-        self.splash_image = None
-        self.player = None
-        self.lines = 0
         self.level = 0
+        self.lines = 0
+        self.player = None
+        self.font = None
+        self.splash_image = None
+        self.tileset = None
+
 
     def setup(self):
         """Setup game."""
@@ -35,7 +39,7 @@ class Tris(object):
         pygame.display.set_caption("tris")
         pygame.key.set_repeat(50, 50)
 
-        self.tileset = Tileset()
+        self.tileset = Tileset('data/blocks.gif', 16, 16)
         self.splash_image = pygame.image.load('data/splash.gif')
         self.font = Font()
 
@@ -76,13 +80,7 @@ class Tris(object):
         lines -- Number of cleared lines
         """
 
-        scores = {0: 0,
-                  1: 100,
-                  2: 200,
-                  3: 400,
-                  4: 800}
-
-        return scores[lines]
+        return 2 ** (lines - 1) * 100
 
     def update_level(self):
         """Update game level i.e. falling speed. """

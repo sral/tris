@@ -116,7 +116,7 @@ class Trimino(object):
         """Draw trimino.
 
         Keyword arguments:
-        surface -- Surface to draw trimino on
+        surface -- Surface to draw on
         """
 
         for coordinates, tile in self.itertiems():
