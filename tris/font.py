@@ -2,8 +2,8 @@ import pygame
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com'
 
-WIDTH = 8
-HEIGHT = 8
+TILE_WIDTH = 8
+TILE_HEIGHT = 8
 
 
 class Font(object):
@@ -12,19 +12,30 @@ class Font(object):
 
         self.font = pygame.image.load('data/font.gif')
 
-    def write(self, surface, x, y, message):
-        """Write message on surface.
+    def write(self, x, y, message):
+        """Write message.
 
         Keyword arguments:
-        surface -- Surface
         x -- x-coordinate
         y -- y-coordinate
         message -- Message to write
         """
 
+        surface = pygame.display.get_surface()
         for char, i in zip(message, range(len(message))):
-            area = pygame.Rect(ord(char) * 8, 0, WIDTH, HEIGHT)
+            area = pygame.Rect(ord(char) * 8, 0, TILE_WIDTH, TILE_HEIGHT)
             surface.blit(self.font,
-                         (x + i * WIDTH, y),
+                         (x + i * TILE_WIDTH, y),
                          area)
+
+    def write_centered(self, y, message):
+        """Write centered message.
+
+        Keyword arguments:
+        y -- y-coordinate
+        message -- Message to write
+        """
+
+        width = pygame.display.get_surface().get_width()
+        self.write((width - len(message) * TILE_WIDTH) / 2, y, message)
 

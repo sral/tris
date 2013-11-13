@@ -1,5 +1,8 @@
 import random
 
+import pygame
+
+
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
 
@@ -175,13 +178,10 @@ class Trimino(object):
 
         return max([y for x, y in self.keys()])
 
-    def draw(self, surface):
-        """Draw trimino.
+    def draw(self):
+        """Draw trimino."""
 
-        Keyword arguments:
-        surface -- Surface to draw on
-        """
-
+        surface = pygame.display.get_surface()
         for coordinates, tile in self.itertiems():
             x0, y0 = coordinates
             self.tileset.draw(surface, tile, x0 + self.x, y0 + self.y)

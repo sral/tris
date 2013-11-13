@@ -1,3 +1,5 @@
+import pygame
+
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
 BLOCK_SIZE = 16
@@ -61,13 +63,10 @@ class Playfield(object):
         except IndexError:
             return False  # GAME OVER!
 
-    def draw(self, surface):
-        """Draw playfield.
+    def draw(self):
+        """Draw playfield."""
 
-        Keyword arguments:
-        surface -- Surface to draw on
-        """
-
+        surface = pygame.display.get_surface()
         for y in range(self.height):
             for x in range(self.width):
                 self.tileset.draw(surface, self[(x, y)], x, y)

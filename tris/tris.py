@@ -30,14 +30,12 @@ class Tris(object):
         self.splash_image = None
         self.tileset = None
 
-
     def setup(self):
         """Setup game."""
 
         pygame.init()
         pygame.display.set_icon(pygame.image.load('data/icon.gif'))
         pygame.display.set_caption("tris")
-        pygame.key.set_repeat(50, 50)
 
         self.tileset = Tileset('data/blocks.gif', 16, 16)
         self.splash_image = pygame.image.load('data/splash.gif')
@@ -55,10 +53,23 @@ class Tris(object):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     sys.exit(0)
-            elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_RETURN:
                     break
             surface.blit(self.splash_image, (0, 0))
+            pygame.display.flip()
+
+    def game_over(self):
+        """Game over."""
+
+        surface = pygame.display.get_surface()
+        while True:
+            event = pygame.event.poll()
+            if event.type == pygame.QUIT:
+                sys.exit(0)
+            elif event.type == pygame.KEYDOWN:
+                if event.key in (pygame.K_ESCAPE, pygame.K_RETURN):
+                    break
+            self.font.write_centered(100, "GAME OVER !!!")
             pygame.display.flip()
 
     def new_game(self):
@@ -67,11 +78,6 @@ class Tris(object):
         self.player = Player()
         self.lines = 0
         self.level = 0
-
-    def game_over(self):
-        """Game over."""
-
-        pass
 
     def update_level(self):
         """Update game level i.e. falling speed. """
@@ -126,60 +132,59 @@ class Tris(object):
 
         surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.fill(0xC4CFA1)  # Same colour as splash screen
-
         playfield = Playfield(PLAYFIELD_WIDTH, PLAYFIELD_HEIGHT,
                               self.tileset)
-        trimino = self.spawn_trimino()
         pygame.time.set_timer(pygame.USEREVENT, START_SPEED)
+        clock = pygame.time.Clock()
+        trimino = self.spawn_trimino()
+        game_over = False
 
-        while True:
+        while not game_over:
             event = pygame.event.poll()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    if not self.legal_move(playfield,
-                                           trimino.move_left()):
-                        trimino.move_right()  # Revert move
-                if event.key == pygame.K_RIGHT:
-                    if not self.legal_move(playfield,
-                                           trimino.move_right()):
-                        trimino.move_left()  # Revert move
-                if event.key == pygame.K_DOWN:  # Soft drop
-                    if not self.legal_move(playfield,
-                                           trimino.move_down()):
-                        trimino.move_up()  # Revert move
+            if event.type == pygame.QUIT:
+                sys.exit(0)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    break
                 if event.key == pygame.K_j:
-                    if not self.legal_move(playfield,
-                                           trimino.rotate_left()):
+                    if not self.legal_move(playfield, trimino.rotate_left()):
                         trimino.rotate_right()  # Revert rotation
                 if event.key == pygame.K_k:
-                    if not self.legal_move(playfield,
-                                           trimino.rotate_right()):
+                    if not self.legal_move(playfield, trimino.rotate_right()):
                         trimino.rotate_left()  # Revert rotation
-            elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:  # Hard drop
                     while self.legal_move(playfield, trimino.move_down()):
                         pass
-                    if not playfield.place_trimino(trimino.move_up()):
-                        break  # GAME OVER!
-                    else:
+                    if playfield.place_trimino(trimino.move_up()):
                         trimino = self.spawn_trimino()
                         self.process_lines(playfield)
-                if event.key == pygame.K_ESCAPE:
-                    break
+                    else:
+                        game_over = True
             elif event.type == pygame.USEREVENT:
                 if not self.legal_move(playfield, trimino.move_down()):
-                    if not playfield.place_trimino(trimino.move_up()):
-                        break  # GAME OVER
-                    else:
+                    if playfield.place_trimino(trimino.move_up()):
                         trimino = self.spawn_trimino()
                         self.process_lines(playfield)
-            elif event.type == pygame.QUIT:
-                sys.exit(0)
-            playfield.draw(surface)
-            trimino.draw(surface)
-            self.font.write(surface, 0, 1, "SCORE: %d" % self.player.score)
-            self.font.write(surface, 0, 10, "LEVEL: %d" % self.level)
+                    else:
+                        game_over = True
+
+            pressed = pygame.key.get_pressed()
+            if pressed[pygame.K_LEFT]:
+                if not self.legal_move(playfield, trimino.move_left()):
+                    trimino.move_right()  # Revert move
+            if pressed[pygame.K_RIGHT]:
+                if not self.legal_move(playfield, trimino.move_right()):
+                    trimino.move_left()  # Revert move
+            if pressed[pygame.K_DOWN]:
+                if not self.legal_move(playfield, trimino.move_down()):
+                    trimino.move_up()  # Revert move
+
+            playfield.draw()
+            trimino.draw()
+            self.font.write(0, 1, "SCORE: %d" % self.player.score)
+            self.font.write(0, 10, "LEVEL: %d" % self.level)
             pygame.display.flip()
+            clock.tick(30)
 
         pygame.time.set_timer(pygame.USEREVENT, 0)  # Disable timer
 
