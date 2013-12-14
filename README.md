@@ -15,8 +15,8 @@ that the world needs another shitty Tetris-clone.
 INSTALLATION
 ------------
 You know the drill:
-> python setup.py test
-> python setup.py install
+> python setup.py test<br />
+> python setup.py install<br />
 
 USAGE
 -----
