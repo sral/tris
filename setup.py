@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(name="tris",
       version="0.1",
@@ -7,8 +7,13 @@ setup(name="tris",
       author="Lars Djerf",
       author_email="lars.djerf@gmail.com",
       url="http://github.com/sral/tris",
-      packages=find_packages(),
-      scripts=["tris/tris.py"],
-      include_package_data=True,
+      install_requires=["pygame"],
+      packages=["tris", "tris.tests"],
       test_suite="tris.tests",
-      install_requires=["pygame"])
+      include_package_data=True,
+      package_data={
+        "tris": ["data/*.gif"],
+        },
+      entry_points={
+        "gui_scripts": ["tris = tris.tris:main_func"]
+        })

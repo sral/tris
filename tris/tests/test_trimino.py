@@ -53,7 +53,3 @@ class TestTrimino(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             Trimino.get('G', 0, 0, None)
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -1,4 +1,5 @@
 import sys
+import pkg_resources
 import pygame
 from font import Font
 from player import Player
@@ -34,11 +35,13 @@ class Tris(object):
         """Setup game."""
 
         pygame.init()
-        pygame.display.set_icon(pygame.image.load('data/icon.gif'))
+        image = pkg_resources.resource_filename(__name__, 'data/icon.gif')
+        pygame.display.set_icon(pygame.image.load(image))
         pygame.display.set_caption("tris")
 
         self.tileset = Tileset('data/blocks.gif', 16, 16)
-        self.splash_image = pygame.image.load('data/splash.gif')
+        image = pkg_resources.resource_filename(__name__, 'data/splash.gif')
+        self.splash_image = pygame.image.load(image)
         self.font = Font()
 
     def splash_screen(self):
@@ -196,9 +199,6 @@ class Tris(object):
             self.main()
             self.game_over()
 
-
-if __name__ == "__main__":
+def main_func():
     tris = Tris()
     tris.run()
-
-

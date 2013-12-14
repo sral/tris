@@ -1,3 +1,4 @@
+import pkg_resources
 import pygame
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com'
@@ -10,7 +11,8 @@ class Font(object):
     def __init__(self):
         """Initialize instance."""
 
-        self.font = pygame.image.load('data/font.gif')
+        tiles = pkg_resources.resource_filename(__name__, 'data/font.gif')
+        self.font = pygame.image.load(tiles)
 
     def write(self, x, y, message):
         """Write message.

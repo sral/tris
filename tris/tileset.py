@@ -1,3 +1,4 @@
+import pkg_resources
 import pygame
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com'
@@ -17,8 +18,8 @@ class Tileset(object):
         self.tile_height = tile_height
         self.tiles = {}
 
+        image = pkg_resources.resource_filename(__name__, image)
         image = pygame.image.load(image)
-
         for i in range(image.get_width() / tile_width):
             area = pygame.Rect(i * tile_width, 0, tile_width, tile_height)
             tile = pygame.Surface((tile_width, tile_height))
