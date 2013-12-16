@@ -12,8 +12,8 @@ setup(name="tris",
       test_suite="tris.tests",
       include_package_data=True,
       package_data={
-        "tris": ["data/*.gif"],
-        },
+          "tris": ["data/*.gif"],
+      },
       entry_points={
-        "gui_scripts": ["tris = tris.tris:main_func"]
-        })
+          "gui_scripts": ["tris = tris.tris:main_func"]
+      })
