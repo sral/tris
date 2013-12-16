@@ -130,7 +130,7 @@ class Tris(object):
         trimino.y = -trimino.get_height() - 1
         return trimino
 
-    def main(self):
+    def game_loop(self):
         """Main loop."""
 
         surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -196,7 +196,7 @@ class Tris(object):
         while True:
             self.splash_screen()
             self.new_game()
-            self.main()
+            self.game_loop()
             self.game_over()
 
 def main_func():
