@@ -24,7 +24,7 @@ class Font(object):
         """
 
         surface = pygame.display.get_surface()
-        for char, i in zip(message, range(len(message))):
+        for i, char in enumerate(message):
             area = pygame.Rect(ord(char) * 8, 0, TILE_WIDTH, TILE_HEIGHT)
             surface.blit(self.font,
                          (x + i * TILE_WIDTH, y),
