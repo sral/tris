@@ -1,14 +1,21 @@
+import os
 import sys
 import pkg_resources
 import pygame
 from font import Font
+from hiscores import HiScores
 from player import Player
 from playfield import Playfield
+from persistor import Persistor
 from tileset import Tileset
 from trimino import Trimino
 
+
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
+HISCORE_PATH = os.path.expanduser("~")
+HISCORE_FILE = ".trisscore"
+MAX_HISCORES = 10
 SPLASH_WIDTH = 200
 SPLASH_HEIGHT = 320
 PLAYFIELD_WIDTH = 10
@@ -30,6 +37,7 @@ class Tris(object):
         self.font = None
         self.splash_image = None
         self.tileset = None
+        self.hiscores = HiScores(max_scores=MAX_HISCORES)
 
     def setup(self):
         """Setup game."""
@@ -45,7 +53,7 @@ class Tris(object):
         self.font = Font()
 
     def splash_screen(self):
-        """Display splash screen. """
+        """Display splash screen."""
 
         surface = pygame.display.set_mode((SPLASH_WIDTH, SPLASH_HEIGHT))
 
@@ -64,7 +72,6 @@ class Tris(object):
     def game_over(self):
         """Game over."""
 
-        surface = pygame.display.get_surface()
         while True:
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
@@ -104,7 +111,8 @@ class Tris(object):
             self.lines += lines
             self.update_level()
 
-    def legal_move(self, playfield, trimino):
+    @staticmethod
+    def legal_move(playfield, trimino):
         """Returns True if move is legal, False otherwise.
 
         Keyword arguments:
@@ -188,7 +196,6 @@ class Tris(object):
             self.font.write(0, 10, "LEVEL: %d" % self.level)
             pygame.display.flip()
             clock.tick(30)
-
         pygame.time.set_timer(pygame.USEREVENT, 0)  # Disable timer
 
     def run(self):
@@ -199,6 +206,11 @@ class Tris(object):
             self.game_loop()
             self.game_over()
 
+
 def main_func():
     tris = Tris()
     tris.run()
+
+
+if __name__ == "__main__":
+    main_func()

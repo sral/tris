@@ -11,75 +11,75 @@ class Trimino(object):
                      (0, 1): 1,
                      (1, 0): 1,
                      (1, 1): 1}, ),
-              'I': ({(0, 0): 2, # vertical
+              'I': ({(0, 0): 2,  # vertical
                      (1, 0): 2,
                      (2, 0): 2,
                      (3, 0): 2},
-                    {(1, 0): 2, # horizontal
+                    {(1, 0): 2,  # horizontal
                      (1, 1): 2,
                      (1, 2): 2,
                      (1, 3): 2}),
-              'J': ({(0, 2): 3, # vertical
+              'J': ({(0, 2): 3,  # vertical
                      (1, 0): 3,
                      (1, 1): 3,
                      (1, 2): 3},
-                    {(0, 0): 3, # Rotated anti-clockwise 90 degrees
+                    {(0, 0): 3,  # Rotated anti-clockwise 90 degrees
                      (1, 0): 3,
                      (2, 0): 3,
                      (2, 1): 3},
-                    {(0, 0): 3, # Upside down
+                    {(0, 0): 3,  # Upside down
                      (0, 1): 3,
                      (0, 2): 3,
                      (1, 0): 3},
-                    {(0, 0): 3, # Rotated clockwise 90 degrees
+                    {(0, 0): 3,  # Rotated clockwise 90 degrees
                      (0, 1): 3,
                      (1, 1): 3,
                      (2, 1): 3}),
-              'L': ({(0, 0): 4, # Vertical
+              'L': ({(0, 0): 4,  # Vertical
                      (0, 1): 4,
                      (0, 2): 4,
                      (1, 2): 4},
-                    {(0, 1): 4, # Rotated anti-clockwise 90 degrees
+                    {(0, 1): 4,  # Rotated anti-clockwise 90 degrees
                      (1, 1): 4,
                      (2, 1): 4,
                      (2, 0): 4},
-                    {(0, 0): 4, # Upside down
+                    {(0, 0): 4,  # Upside down
                      (1, 0): 4,
                      (1, 1): 4,
                      (1, 2): 4},
-                    {(0, 0): 4, # Rotated clockwise 90 degrees
+                    {(0, 0): 4,  # Rotated clockwise 90 degrees
                      (0, 1): 4,
                      (1, 0): 4,
                      (2, 0): 4}),
-              'S': ({(1, 0): 5, # horizontal
+              'S': ({(1, 0): 5,  # horizontal
                      (2, 0): 5,
                      (0, 1): 5,
                      (1, 1): 5},
-                    {(0, 0): 5, # vertical
+                    {(0, 0): 5,  # vertical
                      (0, 1): 5,
                      (1, 1): 5,
                      (1, 2): 5}),
-              'T': ({(0, 0): 6, # down
+              'T': ({(0, 0): 6,  # down
                      (1, 0): 6,
                      (1, 1): 6,
                      (2, 0): 6},
-                    {(0, 0): 6, # right
+                    {(0, 0): 6,  # right
                      (0, 1): 6,
                      (1, 1): 6,
                      (0, 2): 6},
-                    {(1, 0): 6, # up
+                    {(1, 0): 6,  # up
                      (0, 1): 6,
                      (1, 1): 6,
                      (2, 1): 6},
-                    {(1, 0): 6, #left
+                    {(1, 0): 6,  # left
                      (1, 1): 6,
                      (0, 1): 6,
                      (1, 2): 6}),
-              'Z': ({(0, 0): 7, # horizontal
+              'Z': ({(0, 0): 7,  # horizontal
                      (1, 0): 7,
                      (1, 1): 7,
                      (2, 1): 7},
-                    {(1, 0): 7, # vertical
+                    {(1, 0): 7,  # vertical
                      (0, 1): 7,
                      (1, 1): 7,
                      (0, 2): 7})}
@@ -154,7 +154,6 @@ class Trimino(object):
         self.y -= 1
         return self
 
-
     def rotate_left(self):
         """Rotate block left."""
 
@@ -174,7 +173,7 @@ class Trimino(object):
         return self
 
     def get_height(self):
-        """Returns triminio height."""
+        """Returns trimino height."""
 
         return max([y for x, y in self.keys()])
 

@@ -1,7 +1,7 @@
 from unittest import TestCase
 from tris.playfield import Playfield
 
-__author__ = 'Lars Djerf <lars.djerf@gmail.com'
+__author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
 
 class TestPlayfield(TestCase):

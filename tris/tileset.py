@@ -3,8 +3,8 @@ import pygame
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com'
 
-class Tileset(object):
 
+class Tileset(object):
     def __init__(self, image, tile_width, tile_height):
         """Initialize instance.
 
