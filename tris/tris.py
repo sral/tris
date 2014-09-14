@@ -28,6 +28,30 @@ START_SPEED = 700  # milliseconds, initial falling speed
 
 
 class Tris(object):
+    INFO_TEXT = ["CONTROLS",
+                 "--------",
+                 "",
+                 "MOVE -- ARROW KEYS",
+                 "ROTATE -- J/K     ",
+                 "HARD DROP -- SPACE",
+                 "QUIT -- ESCAPE    "]
+
+    HISCORE_TEXT = ["HISCORES",
+                    "--------"]
+
+    CREDITS_TEXT = ["CREDITS",
+                    "-------",
+                    "ORIGNAL CONCEPT AND",
+                    "DESIGN BY          ",
+                    "ALEXEY PAJITNOV    ",
+                    "",
+                    "FEVER CODE AND     ",
+                    "ART BY             ",
+                    "SRAL               ",
+                    "",
+                    "",
+                    "WWW.GITHUB.COM/SRAL"]
+
     def __init__(self):
         """Initialize instance."""
 
@@ -55,7 +79,23 @@ class Tris(object):
     def splash_screen(self):
         """Display splash screen."""
 
+        def draw_text(height, text):
+            for line in text:
+                self.font.write_centered(height, line)
+                height += 10
+
+        pygame.time.set_timer(pygame.USEREVENT, 5000)
         surface = pygame.display.set_mode((SPLASH_WIDTH, SPLASH_HEIGHT))
+
+        hiscore_list = list(self.HISCORE_TEXT)
+        for name, score in self.hiscores:
+            hiscore_list.append(
+                "{0:>3}: {1:>10} ".format(name, score)
+            )
+        texts = (self.INFO_TEXT,
+                 hiscore_list,
+                self.CREDITS_TEXT)
+        text_index = 0
 
         while True:
             event = pygame.event.poll()
@@ -66,7 +106,13 @@ class Tris(object):
                     sys.exit(0)
                 if event.key == pygame.K_RETURN:
                     break
+            elif event.type == pygame.USEREVENT:
+                if text_index < len(texts) - 1:
+                    text_index += 1
+                else:
+                    text_index = 0
             surface.blit(self.splash_image, (0, 0))
+            draw_text(100, texts[text_index])
             pygame.display.flip()
 
     def game_over(self):
@@ -196,6 +242,8 @@ class Tris(object):
             self.font.write(0, 10, "LEVEL: %d" % self.level)
             pygame.display.flip()
             clock.tick(30)
+        if self.hiscores.is_hiscore(self.player.score):
+            self.hiscores.add("LTD", self.player.score)  # TODO: Get initials
         pygame.time.set_timer(pygame.USEREVENT, 0)  # Disable timer
 
     def run(self):
