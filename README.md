@@ -20,15 +20,8 @@ You know the drill:
 
 USAGE
 -----
-After installation just execute:
+After installation execute:
 > tris
 
-__Controls:__
-
-- Left: left arrow key
-- Right: right arrow key
-- Rotate: j/k
-- Soft drop: down arrow key
-- Hard drop: space
 
 -- sral (lars.djerf@gmail.com)

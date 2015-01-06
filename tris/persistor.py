@@ -1,29 +1,32 @@
 import pickle
+import os.path
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
+HISCORE_PATH = os.path.join(os.path.expanduser("~"), ".trisscores")
+
 
 class Persistor(object):
-
     @staticmethod
-    def save(path, obj):
+    def save(obj):
         """Persist object.
 
         Keyword arguments:
-        path -- Target path
-        obj -- The object
+        obj -- The object to persist
         """
 
-        with open(path, "w+b") as f:
-            pickle.dump(obj, f)
+        try:
+            with open(HISCORE_PATH, "w+b") as f:
+                pickle.dump(obj, f)
+        except (IOError, pickle.PickleError):
+            pass
 
     @staticmethod
-    def load(path):
-        """Load object.
+    def load():
+        """Load object."""
 
-        Keyword arguments:
-        path -- Source path
-        """
-
-        with open(path, "rb") as f:
-            return pickle.load(f)
+        try:
+            with open(HISCORE_PATH, "rb") as f:
+                return pickle.load(f)
+        except (IOError, pickle.PickleError):
+            return False

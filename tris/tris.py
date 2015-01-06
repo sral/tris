@@ -1,4 +1,3 @@
-import os
 import sys
 import pkg_resources
 import pygame
@@ -13,9 +12,6 @@ from trimino import Trimino
 
 __author__ = 'Lars Djerf <lars.djerf@gmail.com>'
 
-HISCORE_PATH = os.path.expanduser("~")
-HISCORE_FILE = ".trisscore"
-MAX_HISCORES = 10
 SPLASH_WIDTH = 200
 SPLASH_HEIGHT = 320
 PLAYFIELD_WIDTH = 10
@@ -25,6 +21,9 @@ TILE_HEIGHT = 16
 SCREEN_WIDTH = PLAYFIELD_WIDTH * TILE_WIDTH
 SCREEN_HEIGHT = PLAYFIELD_HEIGHT * TILE_HEIGHT
 START_SPEED = 700  # milliseconds, initial falling speed
+MIN_ALPHA = 0
+MAX_ALPHA = 255
+BACKGROUND_COLOR = (195, 206, 160)
 
 
 class Tris(object):
@@ -36,11 +35,13 @@ class Tris(object):
                  "HARD DROP -- SPACE",
                  "QUIT -- ESCAPE    "]
 
-    HISCORE_TEXT = ["HISCORES",
-                    "--------"]
+    HISCORES_TEXT = ["HISCORES",
+                     "--------",
+                     ""]
 
     CREDITS_TEXT = ["CREDITS",
                     "-------",
+                    "",
                     "ORIGNAL CONCEPT AND",
                     "DESIGN BY          ",
                     "ALEXEY PAJITNOV    ",
@@ -50,7 +51,15 @@ class Tris(object):
                     "SRAL               ",
                     "",
                     "",
+                    "",
                     "WWW.GITHUB.COM/SRAL"]
+
+    GAME_OVER_TEXT = ["GAME OVER !!!"]
+
+    ENTER_HISCORE_TEXT = ["HISCORE",
+                          "-------",
+                          "ENTER INITIALS:",
+                          ""]
 
     def __init__(self):
         """Initialize instance."""
@@ -61,7 +70,7 @@ class Tris(object):
         self.font = None
         self.splash_image = None
         self.tileset = None
-        self.hiscores = HiScores(max_scores=MAX_HISCORES)
+        self.hiscores = None
 
     def setup(self):
         """Setup game."""
@@ -76,57 +85,73 @@ class Tris(object):
         self.splash_image = pygame.image.load(image)
         self.font = Font()
 
-    def splash_screen(self):
-        """Display splash screen."""
+        self.hiscores = Persistor.load()
+        if not self.hiscores:
+            self.hiscores = HiScores.get_default_hiscore_list()
 
-        def draw_text(height, text):
-            for line in text:
-                self.font.write_centered(height, line)
-                height += 10
+    @staticmethod
+    def smoothstep(n):
+        """Smoothstep interpolation.
 
-        pygame.time.set_timer(pygame.USEREVENT, 5000)
-        surface = pygame.display.set_mode((SPLASH_WIDTH, SPLASH_HEIGHT))
+        Keyword arguments:
+        n -- Value to smooth
+        """
 
-        hiscore_list = list(self.HISCORE_TEXT)
-        for name, score in self.hiscores:
-            hiscore_list.append(
-                "{0:>3}: {1:>10} ".format(name, score)
-            )
-        texts = (self.INFO_TEXT,
-                 hiscore_list,
-                self.CREDITS_TEXT)
-        text_index = 0
+        # TODO: Sprinkle this on scrollers
+        return n * n * (3 - 2 * n)
 
-        while True:
-            event = pygame.event.poll()
-            if event.type == pygame.QUIT:
-                sys.exit(0)
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    sys.exit(0)
-                if event.key == pygame.K_RETURN:
-                    break
-            elif event.type == pygame.USEREVENT:
-                if text_index < len(texts) - 1:
-                    text_index += 1
-                else:
-                    text_index = 0
-            surface.blit(self.splash_image, (0, 0))
-            draw_text(100, texts[text_index])
+    @staticmethod
+    def lerp(start, stop, steps):
+        """Linear interpolation between two values.
+
+        Keyword arguments:
+        start -- Start from
+        stop -- Stop at
+        steps -- Number of discreet steps
+        """
+        i = 0.0
+        while i <= steps:
+            v = i / steps
+            yield (stop * v) + (start * (1 - v))
+            i += 1
+
+    @staticmethod
+    def get_ordinal(n):
+        """Returns ordinal (1st, 2nd, 3th, 4th, ...)
+
+        Keyword arguments:
+        n -- Number
+        """
+        if not 0 <= n < 1000:
+            raise ValueError("Domain error")
+
+        ordinal_suffix = {1: "ST",
+                          2: "ND",
+                          3: "RD"}
+        unit_digit = n % 10
+        tens_digit = (n / 10) % 10
+        if tens_digit == 1:
+            return "{0}TH".format(n)
+        else:
+            return "{0}{1}".format(
+                n, ordinal_suffix.get(unit_digit, "TH"))
+
+    def fade(self, fade_surface, start_alpha=MIN_ALPHA, stop_alpha=MAX_ALPHA):
+        """Fade surface.
+
+        Keyword arguments:
+        fade_surface -- Surface to fade in/out
+        start_alpha -- Value to start fade from
+        stop_alpha -- Value to stop fade at
+        """
+
+        surface = pygame.display.get_surface()
+        for alpha in self.lerp(start_alpha, stop_alpha, 50):
+            surface.fill((0, 0, 0))
+            fade_surface.set_alpha(alpha)
+            surface.blit(fade_surface, (0, 0))
             pygame.display.flip()
-
-    def game_over(self):
-        """Game over."""
-
-        while True:
-            event = pygame.event.poll()
-            if event.type == pygame.QUIT:
-                sys.exit(0)
-            elif event.type == pygame.KEYDOWN:
-                if event.key in (pygame.K_ESCAPE, pygame.K_RETURN):
-                    break
-            self.font.write_centered(100, "GAME OVER !!!")
-            pygame.display.flip()
+            pygame.time.delay(5)
 
     def new_game(self):
         """Initialize new game."""
@@ -135,8 +160,96 @@ class Tris(object):
         self.lines = 0
         self.level = 0
 
+    def exit_game(self):
+        """Exit game."""
+
+        Persistor.save(self.hiscores)
+        fade_surface = pygame.display.get_surface().copy()
+        self.fade(fade_surface, MAX_ALPHA, MIN_ALPHA)
+        sys.exit(0)
+
+    def splash_screen(self):
+        """Display splash screen."""
+
+        pygame.time.set_timer(pygame.USEREVENT, 5000)
+        surface = pygame.display.set_mode((SPLASH_WIDTH, SPLASH_HEIGHT))
+
+        fade_surface = pygame.Surface((SPLASH_WIDTH, SPLASH_HEIGHT))
+        fade_surface.blit(self.splash_image, (0, 0))
+        self.fade(fade_surface, MIN_ALPHA, MAX_ALPHA)
+
+        hiscore_list = list(self.HISCORES_TEXT)
+        for n, hiscore in enumerate(self.hiscores):
+            hiscore_list.append(
+                "{0:>4} {1.name:>5} {1.score:>10}".format(
+                    self.get_ordinal(n + 1), hiscore)
+            )
+
+        texts = (self.INFO_TEXT,
+                 hiscore_list,
+                 self.CREDITS_TEXT)
+        text_index = 0
+
+        while True:
+            event = pygame.event.poll()
+            if event.type == pygame.QUIT:
+                self.exit_game()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.exit_game()
+                if event.key == pygame.K_RETURN:
+                    break
+            elif event.type == pygame.USEREVENT:
+                if text_index < len(texts) - 1:
+                    text_index += 1
+                else:
+                    text_index = 0
+            surface.blit(self.splash_image, (0, 0))
+            self.font.write_lines(100, texts[text_index])
+            pygame.display.flip()
+
+    def game_over(self):
+        """Display Game Over screen."""
+
+        surface = pygame.display.get_surface()
+        fade_surface = surface.copy()
+        self.fade(fade_surface, MAX_ALPHA, MAX_ALPHA / 4)
+
+        width = surface.get_width()
+        clear_surface = pygame.Surface((width, 8))
+        clear_surface.blit(surface, (0, 0), area=(0, 160, width, 8))
+
+        is_hiscore = self.hiscores.is_hiscore(self.player.score)
+        initials = []
+        while True:
+            event = pygame.event.poll()
+            if event.type == pygame.QUIT:
+                self.exit_game()
+            elif event.type == pygame.KEYDOWN:
+                if event.key in (pygame.K_ESCAPE, pygame.K_RETURN):
+                    break
+            elif is_hiscore and event.type == pygame.KEYUP:
+                if (pygame.K_a <= event.key <= pygame.K_z and
+                            len(initials) < 3):
+                    initials.append(pygame.key.name(event.key))
+                elif initials and event.key in (pygame.K_BACKSPACE,
+                                                pygame.K_DELETE):
+                    initials.pop()
+            self.font.write_lines(100, self.GAME_OVER_TEXT)
+            if is_hiscore:
+                self.font.write_lines(120, self.ENTER_HISCORE_TEXT)
+                surface.blit(clear_surface, (0, 160))
+                self.font.write(
+                    56, 160, " ".join([n.upper() for n in initials]))
+            pygame.display.flip()
+
+        if is_hiscore:
+            self.hiscores.add("".join(initials).upper(), self.player.score)
+        fade_surface = pygame.display.get_surface().copy()
+        self.fade(fade_surface, MAX_ALPHA, MIN_ALPHA)
+
     def update_level(self):
-        """Update game level i.e. falling speed. """
+        """Update game level i.e. falling speed."""
 
         self.level = int(self.lines / 10)
         speed = START_SPEED - self.level * 70
@@ -185,7 +298,7 @@ class Tris(object):
         return trimino
 
     def game_loop(self):
-        """Main loop."""
+        """Game loop."""
 
         surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.fill(0xC4CFA1)  # Same colour as splash screen
@@ -199,7 +312,7 @@ class Tris(object):
         while not game_over:
             event = pygame.event.poll()
             if event.type == pygame.QUIT:
-                sys.exit(0)
+                self.exit_game()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     break
@@ -242,11 +355,11 @@ class Tris(object):
             self.font.write(0, 10, "LEVEL: %d" % self.level)
             pygame.display.flip()
             clock.tick(30)
-        if self.hiscores.is_hiscore(self.player.score):
-            self.hiscores.add("LTD", self.player.score)  # TODO: Get initials
         pygame.time.set_timer(pygame.USEREVENT, 0)  # Disable timer
 
     def run(self):
+        """Main loop."""
+
         self.setup()
         while True:
             self.splash_screen()

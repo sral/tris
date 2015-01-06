@@ -19,7 +19,7 @@ class TestHiScores(unittest.TestCase):
         self.hiscores.add("LTD", 42)
 
         expected_hiscore_list = [("LTD", 42)]
-        self.assertEqual(self.hiscores.scores, expected_hiscore_list)
+        self.assertEqual(self.hiscores.hiscores, expected_hiscore_list)
 
     def test_add_score_drops_lowest_score(self):
         """IF the list is full the lowest score is dropped
@@ -35,7 +35,7 @@ class TestHiScores(unittest.TestCase):
 
         expected_lowest_score = ("LTD", 1)
 
-        self.assertEqual(self.hiscores.scores[-1], expected_lowest_score)
+        self.assertEqual(self.hiscores.hiscores[-1], expected_lowest_score)
 
     def test_add_score_sorts_list(self):
         """HiScores list should accept and sort scores.
@@ -52,7 +52,7 @@ class TestHiScores(unittest.TestCase):
 
         expected_hiscore_list = [("LTD", 4231), ("LTD", 1234), ("LTD", 42)]
 
-        self.assertEqual(self.hiscores.scores, expected_hiscore_list)
+        self.assertEqual(self.hiscores.hiscores, expected_hiscore_list)
 
     def test_is_hiscore(self):
         """New scores should be correctly compared to the hiscore list

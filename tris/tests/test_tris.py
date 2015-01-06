@@ -105,3 +105,60 @@ class TestTris(TestCase):
         trimino = Trimino.get("O", 0, 0, None)
         self.assertFalse(self.tris.legal_move(self.playfield,
                                               trimino.move_down()))
+
+    def test_get_ordinal(self):
+        """Correct ordinal abbreviations are returned
+
+        Prerequisites:
+        - N/a
+
+        1.) Get ordinal for N
+        => Correct abbreviation is returned
+        """
+
+        expected_values = (
+            (0, "0TH"),
+            (1, "1ST"),
+            (2, "2ND"),
+            (3, "3RD"),
+            (7, "7TH"),
+            (8, "8TH"),
+            (9, "9TH"),
+            (10, "10TH"),
+            (12, "12TH"),
+            (13, "13TH"),
+            (17, "17TH"),
+            (20, "20TH"),
+            (21, "21ST"),
+            (22, "22ND"),
+            (23, "23RD"),
+            (28, "28TH"),
+            (100, "100TH"),
+            (101, "101ST"),
+            (102, "102ND"),
+            (103, "103RD"),
+            (105, "105TH"),
+            (110, "110TH"),
+            (111, "111TH"),
+            (112, "112TH"),
+            (113, "113TH"),
+            (118, "118TH"),
+            (999, "999TH"),
+        )
+
+        for n, expected in expected_values:
+            self.assertEqual(Tris.get_ordinal(n), expected)
+
+    def test_get_ordinal_illegal_value(self):
+        """Get ordinal raises ValueError for illegal values
+
+        Prerequisites:
+        - N is not in the domain
+
+        1.) Get ordinal for N
+        => ValueError is raised
+        """
+        illegal_values = (-5, -1, 1000, 3000)
+
+        for n in illegal_values:
+            self.assertRaises(ValueError, Tris.get_ordinal, n)

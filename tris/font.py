@@ -14,17 +14,17 @@ class Font(object):
         tiles = pkg_resources.resource_filename(__name__, 'data/font.gif')
         self.font = pygame.image.load(tiles)
 
-    def write(self, x, y, message):
-        """Write message.
+    def write(self, x, y, line):
+        """Write line.
 
         Keyword arguments:
         x -- x-coordinate
         y -- y-coordinate
-        message -- Message to write
+        line -- String to write
         """
 
         surface = pygame.display.get_surface()
-        for i, char in enumerate(message):
+        for i, char in enumerate(line):
             area = pygame.Rect(ord(char) * 8, 0, TILE_WIDTH, TILE_HEIGHT)
             surface.blit(self.font,
                          (x + i * TILE_WIDTH, y),
@@ -41,3 +41,13 @@ class Font(object):
         width = pygame.display.get_surface().get_width()
         self.write((width - len(message) * TILE_WIDTH) / 2, y, message)
 
+    def write_lines(self, y, lines):
+        """Write multiple lines of text.
+
+        Keyword arguments:
+        y -- y-coordinate
+        message -- Message to write
+        """
+        for line in lines:
+            self.write_centered(y, line)
+            y += 10
