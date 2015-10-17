@@ -23,5 +23,9 @@ USAGE
 After installation execute:
 > tris
 
+SCREENSHOTS
+-----------
+![Splash screen](https://github.com/sral/tris/blob/master/resources/splash.png)
+![Gameplay](https://github.com/sral/tris/blob/master/resources/gameplay.png)
 
 -- sral (lars.djerf@gmail.com)
